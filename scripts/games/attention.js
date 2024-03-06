@@ -20,8 +20,9 @@ class Rectangle {
  *          - Have to click before it vanished, reduce 'attention span' if vanished without clicking.
  *     "BAD":
  *          - Ignore and don't click, reduce 'attention span' if clicked.
+ * @param {number} shrinkSpeed How fast the rectangle shrink.
  */
-    constructor(x,y,width,height,type) {
+    constructor(x,y,width,height,type,shrinkSpeed) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -59,7 +60,7 @@ class Rectangle {
         })
         .build();
 
-        this.shrinkTime.span = 20; // how fast it reduce the size of the rectangle
+        this.shrinkTime.span = shrinkSpeed; // how fast it reduce the size of the rectangle
         this.slope = height / width;
 
         // create the click handler.
@@ -132,9 +133,7 @@ class Attention extends Game{
 
         // the 'Timeout' for spawning the rectangles
         this.rectsSpawnTime = new TimeoutBuilder(() => this.generateRect()).build();
-        // how fast we will spawn rectangle.
-        this.rectsSpawnTime.setSpan(900);
-    }	
+            }	
 
     // restart the game
     // resetting the 'Timeout's', 'Collection of rectangle', and 'Player' game stat.
@@ -149,17 +148,34 @@ class Attention extends Game{
 
     // Creates a rectangle in a random position
     generateRect() {
-        const gameTimeCurr = Math.floor(this.gameTime.endCounter / 1000);
+        // ratio of current time to end time of the game.
+        const currentRatio  = (this.gameTime.endCounter / this.gameTime.duration);
 
-        const dangerSpawnIncrease = (gameTimeCurr / 50);
-        const type = Math.random() * 1 <= (0.1 + (dangerSpawnIncrease * 0.4)) ? "DANGER" : "SAFE";
+        // the chances of a danger type.
+        // minimum of 10%.
+        const dangerChance = 0.1 + (currentRatio * 0.4);
+        // as the ratio increase the more the danger type as well.
+        const type = Math.random() * 1 <= dangerChance ? "DANGER" : "SAFE";
 
         const SPACEBUFFER = 50;
         const RECTWIDTH = 80;
         const RECTHEIGHT = 110;
+
+        // random position from the buffer to the screen width subtracted by the buffer.
         const randX = Math.random() * (canvas.width - RECTWIDTH - SPACEBUFFER * 2) + SPACEBUFFER;
         const randY = Math.random() * (canvas.height - RECTHEIGHT - SPACEBUFFER * 2) + SPACEBUFFER;
-        const rect = new Rectangle(randX,randY,RECTWIDTH,RECTHEIGHT,type);
+
+        // how fast the rectangle shrink.
+        // minimumum of 1ms.
+        const shrinkSpeed = 20 - (19 * currentRatio);
+
+        const rect = new Rectangle(randX,randY,RECTWIDTH,RECTHEIGHT,type,shrinkSpeed);
+
+        // how fast we will spawn rectangle.
+        // starting speed of 900 milliseconds/ms.
+        // 500ms ending time.
+        const spawnTime = 900 - (currentRatio * 500);
+        this.rectsSpawnTime.setSpan(spawnTime);
 
         this.rects.push(rect);
     }
