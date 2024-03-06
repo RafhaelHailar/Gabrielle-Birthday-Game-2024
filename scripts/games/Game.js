@@ -4,7 +4,7 @@ import { context } from "../screen.js";
 class Game {
 /*
  * Games parent class, contains the timer and update the current game.
- * 
+  
  * @param {number} length The length of the game in milliseconds / ms.
  * @param {function} callback The action that will be perform after each games.
  */
@@ -34,7 +34,6 @@ class Game {
      * Update the current game
      *
      * @param {function} action The action of the current game that will be perform.
-     *
      */
     update(action) {
         if (this.isPlayed) return;

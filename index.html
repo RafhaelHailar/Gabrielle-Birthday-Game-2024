@@ -5,13 +5,47 @@
    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
    <title>title</title>
    <link rel="stylesheet" type="text/css" href="./style.css"/>
-   
 </head>
-<body>
-   <div id="credits">
-        CURSOR: 
+<body class="nocursor">
+   <div class="credits-container hide">
+       <div class="title">Credits: </div>
+       <div id="credits" >
+           
+       </div>
    </div>
    <canvas id="canvas"></canvas>
+   <script type="text/javascript">
+       const GAMERESOURCES = [
+           ["MENU BACKGROUND","https://www.pixelstalk.net/desktop-kids-wallpapers/"],
+           ["CURSOR IMAGE","https://sweezy-cursors.com/cursor/mickey-mouse-hand-inflated-glove/"],
+           ["PHONE IMAGE GAME 1","https://www.freepik.com/free-vector/cute-cell-phone-ring-cartoon-vector-icon-illustration-technology-object-icon-concept-isolated-flat_48782837.htm#fromView=search&page=1&position=6&uuid=295cba7c-83a5-4043-ad20-c5b549a65b21"],
+           ["TEDDY BEAR IMAGE GAME 1","https://www.freepik.com/free-vector/cute-teddy-bear-waving-hand-cartoon-icon-illustration_12681152.htm#query=teddy%20bear%20cartoon&position=0&from_view=keyword&track=ais&uuid=55192888-b9b4-4b05-8007-2e961552edac"],
+           ["BALL TOY IMAGE GAME 1"," https://www.freepik.com/free-vector/ball_2921824.htm#fromView=search&page=1&position=16&uuid=4a70b38b-3c1b-45b8-9a85-94f9d15d69ff"],
+           ["CAR TOY IMAGE GAME 1","https://www.freepik.com/free-vector/sport-car-cartoon-vector-icon-illustration-transportation-object-icon-concept-isolated-premium-vector-flat-cartoon-style_21473075.htm#fromView=search&page=1&position=13&uuid=7f46bb4d-e277-407d-b38a-7807fadc9e28"],
+       ];
+
+       const credits = document.querySelector("#credits");
+       const creditWrapper = document.createElement("div");
+
+       for (let i =0;i < GAMERESOURCES.length;i++) {
+           const [name,link] = GAMERESOURCES[i];
+            
+           const container = document.createElement("div");
+           const nameElement = document.createElement("div");
+           const linkElement = document.createElement("a");
+           
+           nameElement.innerHTML = name;
+           linkElement.innerHTML = link;
+           linkElement.setAttribute("target","_blank");
+           linkElement.setAttribute("href",link);
+
+           container.appendChild(nameElement);
+           container.appendChild(linkElement);
+
+           creditWrapper.appendChild(container);
+       }
+       credits.appendChild(creditWrapper);
+   </script>
    <script type="module" src="./scripts/main.js"></script>
 </body>
 </html>

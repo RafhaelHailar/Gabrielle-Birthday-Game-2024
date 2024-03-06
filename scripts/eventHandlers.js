@@ -29,7 +29,11 @@ class Cursor {
             this.imageHeight = cursorImage.height;
             this.add();
         };
+        
+        // hide the cursor image.
+        this.isHidden = false;
     }
+
     // add the cursor to the screen, and its handlers.
     add() {
         function mouseMoveHandler(event) {
@@ -51,14 +55,28 @@ class Cursor {
         addUnClickHandler(unClickHandler.bind(this));
     }
 
+    /*
+     * Hide / Show the cursor image.
+     *
+     * @param {booelean} toHide Tells whether to we will hide the cursor or not.
+     */
+    setIsHidden(toHide) {
+        this.isHidden = toHide;
+
+        // show or hide the default cursor.
+        document.body.classList.toggle("nocursor",!toHide);
+    }
+
     // draw the cursor to the screen if its image is ready.
     draw() {
         if (!this.image) return;
         let cursorSpriteX = 0;
         if (this.clicked) cursorSpriteX = 1;
-
-        context.drawImage(this.image,cursorSpriteX * (this.imageWidth / 2 - 30),0,this.imageWidth / 2 - 20,this.imageHeight,this.x,this.y,this.width,this.height);
-        context.strokeRect(this.x,this.y,this.width,this.height);
+        
+        if (!this.isHidden) {
+            context.drawImage(this.image,cursorSpriteX * (this.imageWidth / 2 - 30),0,this.imageWidth / 2 - 20,this.imageHeight,this.x,this.y,this.width,this.height);
+            context.strokeRect(this.x,this.y,this.width,this.height);
+        }
     }
 };
 
@@ -115,12 +133,18 @@ function addKeyUpHandler(handler) {
  */
 function isInTarget(event,target) {
     const cursor = new Cursor();
-    const x = cursor.x + 10;
-    const y = cursor.y;
-    const width = 20;
-    const height = 20;
+    let x = cursor.x;
+    let y = cursor.y;
+    let width = 0;
+    let height = 0;
 
-    console.log(cursor.width,cursor.height);
+    if (!cursor.isHidden) {
+        // the size of the click detection.
+        const targetSize = 20;
+        x += targetSize / 2;
+        width = height = targetSize;
+    }
+
     return x + width > target.x && x < target.x + target.width && y + height > target.y && y < target.y + target.height;
 }
 

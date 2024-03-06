@@ -60,7 +60,8 @@ class Display {
             this.frame3.bind(this),
             this.frame4.bind(this),
             this.frame5.bind(this),
-            this.frame6.bind(this)
+            this.frame6.bind(this),
+            this.showCreditsFrame.bind(this)
         ];
 
         // all the games.
@@ -160,7 +161,9 @@ class Display {
         });
 
         btn2.attachClick(() => {
-            
+            this.updateFrame(this.frames.length - 1); 
+            this.toggleCredits(true); // show credits.
+            this.cursor.setIsHidden(true); // hide the cursor image show the default cursor.
         });
 
         for (let game in this.Games) {
@@ -301,6 +304,35 @@ class Display {
     }
 
     /*
+     * Toggle credits display.
+     *
+     * @param {boolean} isShow The boolean that tells whether we displays the credits or not.
+     */
+    toggleCredits(isShow) {
+        const creditsElement = document.querySelector(".credits-container");
+        creditsElement.classList.toggle("hide",!isShow);
+    }
+
+    // show credits.
+    showCreditsFrame() {
+        let display = [];
+        let bg = new Background("rgba(0,0,0, 0.7)");
+        bg.setImage("../images/game-menu-bg.jpg", {
+            opacity: 1
+        });   
+        let backBtn = new Button(canvas.width * 0.05,canvas.height * 0.05,200,100,"BACK");
+        backBtn.attachClick(() => {
+            this.updateFrame(1);
+            this.toggleCredits(false);
+            this.cursor.setIsHidden(false);
+        });
+
+        display.push(bg);
+        display.push(backBtn);
+        this.setDisplays(display);
+    }
+
+    /*
      * Change the frame to the frame that is passed, removing all the displays, and handlers of the current frame.
      *
      * @param {number} frame The frame we are going to switch to.
@@ -313,7 +345,7 @@ class Display {
         this.displayFrame();
         this.cursor.add();
     }
-    
+
     // Update the game status, handlers and draw the frames on the screen.
     update() {
         context.clearRect(0,0,canvas.width,canvas.height);
