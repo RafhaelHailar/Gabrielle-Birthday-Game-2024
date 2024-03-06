@@ -3,9 +3,9 @@ import Text from "./ui/Text.js";
 import { Cursor, removeHandlers,addMouseMoveHandler, addClickHandler, addUnClickHandler } from "./eventHandlers.js";
 import Component from "./ui/Component.js";
 
-import Attention from "./games/Attention.js";
-import Confidence from "./games/Confidence.js";
-import Passion from "./games/Passion.js";
+import Attention from "./games/attention.js";
+import Confidence from "./games/confidence.js";
+import Passion from "./games/passion.js";
 
 let canvas,context;
 canvas = document.querySelector("#canvas");
@@ -13,6 +13,9 @@ context = canvas.getContext("2d");
 
 canvas.width = innerWidth;
 canvas.height = innerHeight;
+
+const CENTERX = canvas.width / 2;
+const CENTERY = canvas.height / 2;
 
 
 class Background extends Component{
@@ -67,6 +70,7 @@ class Display {
             passion: new Passion()
         };
 
+        // game cursor
         this.cursor = new Cursor();
         
         // a pause button that can change the frame to paused, stopping the current game we are playing.
@@ -100,15 +104,23 @@ class Display {
         let bg = new Background("rgba(150,20,20,1)");
 
         let resumeBtn = new Button(600,350,200,100,"RESUME");
+	let menuBtn = new Button(CENTERX - 200 / 2,canvas.height * 0.3,200,100,"MENU");
 
         resumeBtn.attachClick(() => {
             this.updateFrame(this._previousFrame);
         });
+
+	menuBtn.attachClick(() => {
+	    this.updateFrame(1);
+	});
+
         displays.push(bg);
         displays.push(resumeBtn);
+	displays.push(menuBtn);
         this.setDisplays(displays);
     }
 
+    // menu frame, going here resets the game and 'Player' stats.
     menuFrame() {
         let displays = [];
         
@@ -151,6 +163,11 @@ class Display {
             
         });
 
+        for (let game in this.Games) {
+            if (this.Games[game].restart)
+                this.Games[game].restart();
+        }
+
         displays.push(bg);
         displays.push(btn1);
         displays.push(btn2);
@@ -166,10 +183,10 @@ class Display {
             `In the year 2020, where everyone was inside their house feeling dark, sad, and hopeless because of the COVID-19 pandemic.
              there born a beautiful, wonderful, and spectacular girl who in turn give light to a family
              and her name is Gabrielle.`
-        , 700, 150, 40, "red",1200);
+        , canvas.width / 2, canvas.height * 0.25, 40, "red",1200);
         txt1.setLineSpacing(20);
 
-        let btn1 = new Button(800,370,200,100,"NEXT");
+        let btn1 = new Button(canvas.width / 2 - 200 / 2,canvas.height * 0.4,200,100,"NEXT");
         btn1.setTextColor("yellow");
         btn1.setTextSize(40);
 
@@ -228,6 +245,7 @@ class Display {
         });
 
         displays.push(bg);
+
         displays.push(this.Games.attention);
 
         // pause frame will be add to displays and remove 

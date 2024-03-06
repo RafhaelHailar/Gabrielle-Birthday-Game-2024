@@ -134,7 +134,18 @@ class Attention extends Game{
         this.rectsSpawnTime = new TimeoutBuilder(() => this.generateRect()).build();
         // how fast we will spawn rectangle.
         this.rectsSpawnTime.setSpan(900);
+    }	
+
+    // restart the game
+    // resetting the 'Timeout's', 'Collection of rectangle', and 'Player' game stat.
+    restart() {
+        super.restart();
+        this.rectsSpawnTime.restart();
+        this.rects = [];
+        this.resetToBeRemoveRects();
+        this.attentionSpan = 1;
     }
+
 
     // Creates a rectangle in a random position
     generateRect() {
@@ -168,7 +179,7 @@ class Attention extends Game{
                 this.toBeRemoveRects.push(rect);
             }
         }
-    }
+	}
 
     // Remove the rectangles.
     finalizeRemoveRects() {
