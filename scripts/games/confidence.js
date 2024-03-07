@@ -13,6 +13,9 @@ const playerStats = new PlayerStats();
 // game screen
 let GameScreen;
 
+// images
+let Images;
+
 class Rectangle {
 /*
  * Create a rectangle use for drawing
@@ -33,8 +36,29 @@ class Rectangle {
     
     // draw the rectangle in the screen.
     draw() {
-        context.fillStyle = this.color;
-        context.fillRect(this.x + GameScreen.x,this.y + GameScreen.y,this.width,this.height);
+        if (this.type) {
+            let image = Images.annoyedCat;
+
+            switch (this.type) {
+                case "normal":
+                    image = Images.smileCat;
+                    break;
+                case "skipping":
+                    image = Images.stillCat;
+                    break;
+                case "speederD":
+                    if (this.color == "cyan") image = Images.annoyedCat;
+                    else image = Images.seriousCat;
+                    break;
+            }
+            context.drawImage(image,this.x + GameScreen.x,this.y + GameScreen.y,this.width,this.height);
+        } else if (this instanceof Player) {
+            if (this.image)
+                context.drawImage(this.image,this.x + GameScreen.x,this.y + GameScreen.y,this.width,this.height);
+        }else {
+            context.fillStyle = this.color;
+            context.fillRect(this.x + GameScreen.x,this.y + GameScreen.y,this.width,this.height);
+        }
     }
 }
 
@@ -51,7 +75,7 @@ class MovableRect extends Rectangle {
         this.velocityY = 0; // how fast the rectangle moves in vertically. 
     }
 
-    // update the position of the rectangle and draw it.
+    // update the position of the rectangle and draw it. + GameScreen.y
     update() {
         this.x += this.velocityX;
         this.y += this.velocityY;
@@ -70,6 +94,17 @@ class Player extends MovableRect {
         super(x,y,width,height,color);
         this.receivingDamage = false; // whether the player collides with blocks, if it collide then it was receiving damage.
         this.isSafeId = null; // id of the timeout, when will the player be safe.
+        
+        const normalImage = new Image();
+        normalImage.src = "../../images/player-normal-game-2.jpg";
+        this.normalImage = normalImage;
+
+        const damageImage = new Image();
+        damageImage.src = "../../images/player-damage-game-2.jpg";
+        this.damageImage = damageImage;
+
+        this.image = this.normalImage;
+
     }
 
     // set whether the player is receiving damage or not.
@@ -86,12 +121,14 @@ class Player extends MovableRect {
             Confidence.value -= 0.02;
         } 
         this.color = "white";
+        this.image = this.damageImage;
         if (this.isSafeId != null) {
             clearTimeout(this.isSafeId);
         }
 
         this.isSafeId = setTimeout(() => {
             this.color = "orange";
+            this.image = this.normalImage;
             this.setReceivedDamage(false);
         },300);
 
@@ -233,7 +270,7 @@ class Block extends MovableRect {
      * @param {number} screenY How much is the screen moves vertically, when the player goes up or down.
      */
     update(screenY) {
-//        this.updateVelocity();
+        this.updateVelocity();
 
         if (this.type == "speederD") {
             this.x = (GameScreen.width / 2 - this.width / 2) + Math.cos(this.incrementing) * 300 * Math.cos(this.incrementing * 0.1);
@@ -247,15 +284,6 @@ class Block extends MovableRect {
         this.logic();
         this.draw();
 
-        if (this.extentBuffer > 0) {
-            context.fillStyle = "yellow";
-       //     context.fillRect(GameScreen.x + GameScreen.width,0,this.extentBuffer,GameScreen.height);
-            context.fillStyle = "blue";
-            context.fillRect(GameScreen.x - this.extentBuffer,0,10,GameScreen.height);
-            context.fillRect(GameScreen.x + GameScreen.width +  this.extentBuffer,0,10,GameScreen.height);
-        }
-
-       
         super.update();
     }
 }
@@ -360,9 +388,21 @@ class Confidence extends Game {
         };
         GameScreen.x = canvas.width / 2 - (GameScreen.width / 2);
 
+        Images = {};
+
+        const catImages = ["annoyed","serious","smile","still"];
+        for (let catImage of catImages) {
+            let image = new Image();
+            image.src = `../../images/cat-${catImage}-cute-rectangle-game-2.png`;
+            Images[catImage + "Cat"] = image;
+        }
+
+        Images.background = new Image();
+        Images.background.src = "../../images/game-2-bg.jpg";
+
         // the player width and height
-        const PLAYERWIDTH = 40;
-        const PLAYERHEIGHT = 70;
+        const PLAYERWIDTH = GameScreen.width * 0.12;
+        const PLAYERHEIGHT = GameScreen.width * 0.13;
         // create the player.
         this.player = new Player(GameScreen.width / 2,GameScreen.height -PLAYERHEIGHT-200,PLAYERWIDTH,PLAYERHEIGHT,"orange");
 
@@ -378,37 +418,36 @@ class Confidence extends Game {
         this.blocks = {
             normals: [
                new Blocks("normal","d",10,200,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
-          /*     new Blocks("normal","c",10,-500,50,50,"red"),
-               new Blocks("normal","d",10,-700,50,50,"red"),
-               new Blocks("normal","b",10,-1900,50,50,"red"),
-               new Blocks("normal","b",10,-2300,50,50,"red"),
-               new Blocks("normal","b",10,-2500,50,50,"red"),
-               new Blocks("normal","b",10,-2900,50,50,"red"),
-               new Blocks("normal","b",10,-3100,50,50,"red"),
-               new Blocks("normal","a",10,-3600,50,50,"red"),
-               new Blocks("normal","a",10,-3800,50,50,"red"),
-               new Blocks("normal","a",10,-5000,50,50,"red"),
-               new Blocks("normal","a",10,-6000,50,50,"red"), */
+               new Blocks("normal","c",10,-500,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+               new Blocks("normal","d",10,-700,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+               new Blocks("normal","b",10,-1900,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+               new Blocks("normal","b",10,-2300,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+               new Blocks("normal","b",10,-2500,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+               new Blocks("normal","b",10,-2900,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+               new Blocks("normal","b",10,-3100,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+               new Blocks("normal","a",10,-3600,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+               new Blocks("normal","a",10,-3800,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+               new Blocks("normal","a",10,-5000,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+               new Blocks("normal","a",10,-6000,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"), 
             ],
             skippings: [
-                /*
-                new Blocks("skipping","c",10,-200,50,50,"red"),
-                new Blocks("skipping","c",10,-1400,50,50,"red"),
-                new Blocks("skipping","c",10,-1600,50,50,"red"),
-                new Blocks("skipping","b",10,-2700,50,50,"red"),
-                new Blocks("skipping","b",10,-3300,50,50,"red"),
-                new Blocks("skipping","a",10,-4000,50,50,"red"),
-                new Blocks("skipping","a",10,-4200,50,50,"red"),
-                new Blocks("skipping","a",10,-4600,50,50,"red"),
-                new Blocks("skipping","a",10,-4800,50,50,"red"),
-                new Blocks("skipping","a",10,-5800,50,50,"red"),*/
+                new Blocks("skipping","c",10,-200,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("skipping","c",10,-1400,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("skipping","c",10,-1600,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("skipping","b",10,-2700,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("skipping","b",10,-3300,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("skipping","a",10,-4000,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("skipping","a",10,-4200,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("skipping","a",10,-4600,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("skipping","a",10,-4800,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("skipping","a",10,-5800,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
             ],
             speeders: [
-                new Blocks("speederD","b",10,-1000,50,50,"red"),
-                new Blocks("speederD","b",10,-2100,50,50,"red"),
-                new Blocks("speederD","a",10,-4400,50,50,"red"),
-                new Blocks("speederD","a",10,-5300,50,50,"red"),
-                new Blocks("speederD","a",10,-5500,50,50,"red"),
+                new Blocks("speederD","b",10,-1000,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("speederD","b",10,-2100,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("speederD","a",10,-4400,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("speederD","a",10,-5300,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+                new Blocks("speederD","a",10,-5500,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
             ],
             /*
              * Get all of the blocks created.
@@ -582,15 +621,11 @@ class Confidence extends Game {
             this.logic();
             this.lowAttentionSpanEffectTime.update();
 
-            // draw the screen
-            context.fillStyle = "black";
-            context.fillRect(GameScreen.x,GameScreen.y,GameScreen.width,GameScreen.height);
-
             // remember the drawing state of the game.
             context.save();
             
             // set the opacity of the drawings.
-    //        context.globalAlpha = this.objectsOpacity;
+            context.globalAlpha = this.objectsOpacity;
             this.allBlocks.forEach(block => block.update(this.screenY));
 
             context.restore();
@@ -601,8 +636,36 @@ class Confidence extends Game {
 
             // outer walls 
             // for hiding the things that go over the path width
-         //   (new Rectangle(GameScreen.width,0,canvas.width / 2 + GameScreen.width / 2,canvas.height,"pink")).draw();
-         //   (new Rectangle(-canvas.width / 2 + GameScreen.width / 2,0,canvas.width / 2 - GameScreen.width / 2,canvas.height,"yellow")).draw();
+            context.drawImage(
+                Images.background,
+                0, // image source x
+                0, // image source y
+                // image source width
+                Images.background.width - Images.background.width * ((canvas.width / 2 + GameScreen.width / 2) / canvas.width),
+                //image source height
+                Images.background.height,
+                // canvas properties
+                0,
+                0,
+                canvas.width / 2 - GameScreen.width / 2,
+                canvas.height
+            );
+            context.drawImage(
+                Images.background,
+                // image source x
+                Images.background.width * ((GameScreen.width / 2 + canvas.width / 2) / canvas.width), //Images.background.width - Images.background.width * (GameScreen.width / canvas.width),
+                // image source y
+                0,
+                // image source width
+                Images.background.width,
+                // image source height
+                Images.background.height,
+                // canvas properties
+                canvas.width / 2 + GameScreen.width / 2,
+                0,
+                canvas.width,
+                canvas.height
+            );
         });
 
         context.font = "70px Arial";

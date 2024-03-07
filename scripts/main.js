@@ -19,6 +19,8 @@ function update(currentTime) {
     requestAnimationFrame(update);
 }
 
-requestAnimationFrame(update);
+window.addEventListener("DOMContentLoaded",function() {
+    requestAnimationFrame(update);
+});
 
 

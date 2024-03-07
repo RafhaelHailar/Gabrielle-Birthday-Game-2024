@@ -265,7 +265,7 @@ class Display {
     frame5() {
         let displays = [];
         
-        let bg = new Background("rgba(0,60,0, 0.7)");
+        let bg = new Background("#FFF8E3");
 
         this.Games.confidence.addHandlers();
         displays.push(bg);
