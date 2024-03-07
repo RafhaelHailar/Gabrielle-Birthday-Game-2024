@@ -9,10 +9,8 @@ const schedules = new SchedulesHolder();
 
 // player statistics
 const playerStats = new PlayerStats();
-console.log(playerStats.getAttentionSpan());
 
 // game screen
-const SCREENWIDTH = 500;
 let GameScreen;
 
 class Rectangle {
@@ -136,8 +134,9 @@ class Block extends MovableRect {
  * @param {string}["normal" | "skipping" | "speederD"] type The type of the block that is being create.
  * @param {string}["a"|"b"|"c"|"d"] subtype The different versions of the type of the block, it tells how fast is that type, a is the fastest and d is the slowest.
  * @param {number} extentBuffer It adds to how far should be the block to tell whether it is out of the screen.
+ * @param {number} otherBlockDistance The space between this block and other block in blocks.
  */
-    constructor(x,y,width,height,color,type,subtype,extentBuffer = 0) {
+    constructor(x,y,width,height,color,type,subtype,extentBuffer = 0,otherBlockDistance = null) {
        super(x,y,width,height,color); 
        this.velocityX = 0;
 
@@ -190,11 +189,13 @@ class Block extends MovableRect {
                }
        }
 
+       // this.velocityX = 0;
        this.prevVelocityX = this.velocityX; // the initial velocity of the block, for resetting the velocity of it.
        this.type = type;
        this.subtype = subtype;
        this.extentBuffer = extentBuffer;
        this.prevY = y; // the initial y position of the block, it was added with 'screenY' to move the block when the player is going up.
+       this.otherBlockDistance = otherBlockDistance;
 
     }
 
@@ -210,8 +211,8 @@ class Block extends MovableRect {
     // Check whether the block is out of the screen to the right, if it is put it back to the left of the screen.
     logic() {
         if (this.type != "speederD") {
-            if (this.x > SCREENWIDTH + this.extentBuffer) {
-                this.x = -this.width - this.extentBuffer;
+            if (this.x > GameScreen.width + this.otherBlockDistance + this.extentBuffer) {
+                this.x = -this.extentBuffer;
             }
         }
     }
@@ -232,10 +233,10 @@ class Block extends MovableRect {
      * @param {number} screenY How much is the screen moves vertically, when the player goes up or down.
      */
     update(screenY) {
-        this.updateVelocity();
+//        this.updateVelocity();
 
         if (this.type == "speederD") {
-            this.x = (SCREENWIDTH / 2 - this.width / 2) + Math.cos(this.incrementing) * 300 * Math.cos(this.incrementing * 0.1);
+            this.x = (GameScreen.width / 2 - this.width / 2) + Math.cos(this.incrementing) * 300 * Math.cos(this.incrementing * 0.1);
             this.incrementing += this.incrementSpeed;
             if (this.incrementing >= 360) {
                 this.incrementing = 0;
@@ -246,7 +247,15 @@ class Block extends MovableRect {
         this.logic();
         this.draw();
 
-        
+        if (this.extentBuffer > 0) {
+            context.fillStyle = "yellow";
+       //     context.fillRect(GameScreen.x + GameScreen.width,0,this.extentBuffer,GameScreen.height);
+            context.fillStyle = "blue";
+            context.fillRect(GameScreen.x - this.extentBuffer,0,10,GameScreen.height);
+            context.fillRect(GameScreen.x + GameScreen.width +  this.extentBuffer,0,10,GameScreen.height);
+        }
+
+       
         super.update();
     }
 }
@@ -269,26 +278,41 @@ class Blocks {
             case "normal":
             case "skipping":
                 totalBlock = 5;
-                spacing = 100;
+                spacing = GameScreen.width * 0.2; // 20% of the screen width.
+                // since, we know that the width of each block is 10% of the screen,
+                // and there's a total of 5 of them, so we have 50% of width already taken by blocks,
+                // then additional 20% for each space between blocks and there's 4 of those 40%,
+                // so we have 80% for each space, now we have a total of 130% width taken by blocks,
+                // now we know that the total width of blocks exceed the width of the screen,
+                // since the width of the screen is 100%.
+                // To get the the extent buffer we reduce the width of the screen to it, to get the total exceeding amount,
+                // and divide it by 2 to get the extent in both left and right side.
+                // so we have 130% - 100% = 30% / 2 = 15%.
+                // 15% space for each side of the screen.
+                // 15% 100% 15% = 130%.
+                let extentBuffer = ((width * totalBlock + spacing * (totalBlock - 1)) - GameScreen.width) / 2;
 
                 for (let i = 0;i < totalBlock;i++) {
-                   const space = width + spacing;
                    const block = new Block(
-                       x + (space * i),
+                       // the starting x will be a space less than the extentBuffer.
+                       // to not make the rightmost block to go back immediatey or go the the -extentBuffer because , it starts with the
+                       // a distance exceeding the extentBuffer.
+                       -extentBuffer + ((spacing + width) * i),
                        y,
                        width,
                        height,
                        color,
                        type,
                        subtype,
-                       spacing
+                       extentBuffer,
+                       spacing,
                    );
                    this.blocks.push(block);
                 }
                 break;
             case "speederD":
                 const blockD = new Block(
-                    x + SCREENWIDTH / 2 - width / 2,
+                    x + GameScreen.width / 2 - width / 2,
                     y,
                     width,
                     height,
@@ -298,7 +322,7 @@ class Blocks {
                     0
                 );
                 const blockA = new Block(
-                    x + SCREENWIDTH / 2 - width / 2,
+                    x + GameScreen.width / 2 - width / 2,
                     y,
                     width,
                     height,
@@ -330,17 +354,17 @@ class Confidence extends Game {
 
         // the size and position of the game screen.
         GameScreen = {
-            x: canvas.width / 2 - (SCREENWIDTH / 2),
             y: 0,
-            width: SCREENWIDTH,
+            width: canvas.width * 0.3,
             height: canvas.height
         };
+        GameScreen.x = canvas.width / 2 - (GameScreen.width / 2);
 
         // the player width and height
         const PLAYERWIDTH = 40;
         const PLAYERHEIGHT = 70;
         // create the player.
-        this.player = new Player(SCREENWIDTH / 2,GameScreen.height -PLAYERHEIGHT-200,PLAYERWIDTH,PLAYERHEIGHT,"orange");
+        this.player = new Player(GameScreen.width / 2,GameScreen.height -PLAYERHEIGHT-200,PLAYERWIDTH,PLAYERHEIGHT,"orange");
 
         // check whether a particular key is being pressed.
         this.KEYSDOWN = {
@@ -353,8 +377,8 @@ class Confidence extends Game {
         // holds differnet types of blocks
         this.blocks = {
             normals: [
-               new Blocks("normal","d",10,200,50,50,"red"),
-               new Blocks("normal","c",10,-500,50,50,"red"),
+               new Blocks("normal","d",10,200,GameScreen.width * 0.1,GameScreen.width * 0.1,"red"),
+          /*     new Blocks("normal","c",10,-500,50,50,"red"),
                new Blocks("normal","d",10,-700,50,50,"red"),
                new Blocks("normal","b",10,-1900,50,50,"red"),
                new Blocks("normal","b",10,-2300,50,50,"red"),
@@ -364,9 +388,10 @@ class Confidence extends Game {
                new Blocks("normal","a",10,-3600,50,50,"red"),
                new Blocks("normal","a",10,-3800,50,50,"red"),
                new Blocks("normal","a",10,-5000,50,50,"red"),
-               new Blocks("normal","a",10,-6000,50,50,"red"),
+               new Blocks("normal","a",10,-6000,50,50,"red"), */
             ],
             skippings: [
+                /*
                 new Blocks("skipping","c",10,-200,50,50,"red"),
                 new Blocks("skipping","c",10,-1400,50,50,"red"),
                 new Blocks("skipping","c",10,-1600,50,50,"red"),
@@ -376,7 +401,7 @@ class Confidence extends Game {
                 new Blocks("skipping","a",10,-4200,50,50,"red"),
                 new Blocks("skipping","a",10,-4600,50,50,"red"),
                 new Blocks("skipping","a",10,-4800,50,50,"red"),
-                new Blocks("skipping","a",10,-5800,50,50,"red"),
+                new Blocks("skipping","a",10,-5800,50,50,"red"),*/
             ],
             speeders: [
                 new Blocks("speederD","b",10,-1000,50,50,"red"),
@@ -483,8 +508,8 @@ class Confidence extends Game {
             this.player.x = 0;
         }
 
-        if (player.x + player.width > SCREENWIDTH) {
-            this.player.x = SCREENWIDTH - player.width;
+        if (player.x + player.width > GameScreen.width) {
+            this.player.x = GameScreen.width - player.width;
         }
 
         // collission detection when the player reached the bottom of the screen, and still moving down.
@@ -565,7 +590,7 @@ class Confidence extends Game {
             context.save();
             
             // set the opacity of the drawings.
-            context.globalAlpha = this.objectsOpacity;
+    //        context.globalAlpha = this.objectsOpacity;
             this.allBlocks.forEach(block => block.update(this.screenY));
 
             context.restore();
@@ -576,8 +601,8 @@ class Confidence extends Game {
 
             // outer walls 
             // for hiding the things that go over the path width
-            (new Rectangle(SCREENWIDTH,0,canvas.width / 2 + SCREENWIDTH / 2,canvas.height,"pink")).draw();
-            (new Rectangle(-SCREENWIDTH,0,SCREENWIDTH,canvas.height,"yellow")).draw();
+         //   (new Rectangle(GameScreen.width,0,canvas.width / 2 + GameScreen.width / 2,canvas.height,"pink")).draw();
+         //   (new Rectangle(-canvas.width / 2 + GameScreen.width / 2,0,canvas.width / 2 - GameScreen.width / 2,canvas.height,"yellow")).draw();
         });
 
         context.font = "70px Arial";
