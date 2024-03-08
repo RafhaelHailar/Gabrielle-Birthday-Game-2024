@@ -21,17 +21,50 @@ class Cursor {
         this.clicked = false;
         this.resetSpriteId = null;
 
-        const cursorImage = new Image();
-        cursorImage.src = "../images/mickey-mouse-hand-inflated-glove-custom-cursor.png";
-        cursorImage.onload = () => {
-            this.image = cursorImage;
-            this.imageWidth = cursorImage.width;
-            this.imageHeight = cursorImage.height;
+        const handImage = new Image();
+        handImage.src = "../images/mickey-mouse-hand-inflated-glove-custom-cursor.png";
+        handImage.onload = () => {
+            this.imageWidth = handImage.width;
+            this.imageHeight = handImage.height;
+            this.handImage = handImage;
             this.add();
         };
+
+        const pencilImage = new Image();
+        pencilImage.src = "../images/pencil-cursor.png";
+        pencilImage.onload = () => {
+            this.pencilImage = pencilImage;
+        };
         
+        this.type="hand";
+
         // hide the cursor image.
         this.isHidden = false;
+    }
+
+    /*
+     *
+     * Update or change the type of the cursor, for its image.
+     *
+     * @param {number}["hand"|"pencil"] type The type of the cursor.
+     */
+    setType(type) {
+        this.type = type;
+    }
+
+    // update the image, its width and height, having the 'hand image' as our default.
+    updateImage() {
+        let image = this.handImage;
+
+        if (this.type == "pencil" && this.pencilImage) {
+            image = this.pencilImage;
+        }
+
+        this.image = image;
+        if (this.image) {
+            this.imageWidth = image.width;
+            this.imageHeight = image.height;
+        }
     }
 
     // add the cursor to the screen, and its handlers.
@@ -69,14 +102,45 @@ class Cursor {
 
     // draw the cursor to the screen if its image is ready.
     draw() {
+        this.updateImage();
         if (!this.image) return;
-        let cursorSpriteX = 0;
-        if (this.clicked) cursorSpriteX = 1;
-        
+
         if (!this.isHidden) {
-            context.drawImage(this.image,cursorSpriteX * (this.imageWidth / 2 - 30),0,this.imageWidth / 2 - 20,this.imageHeight,this.x,this.y,this.width,this.height);
-            context.strokeRect(this.x,this.y,this.width,this.height);
+            // update the image source x when clicked.
+            let cursorSpriteX = 0;
+            if (this.clicked && this.image == this.handImage) cursorSpriteX = 1;
+
+            // adjust the image source width for the hand image.
+            let imageWidth = this.imageWidth / 2 - 20;
+
+            // image canvas x and y varies depend on the image.
+            let canvasX = this.x;
+            let canvasY = this.y;
+
+            if (this.type == "pencil") {
+                imageWidth = this.imageWidth;
+                
+                canvasX = this.x;
+                canvasY = this.y - this.height;
+            } 
+
+            if (this.image) {
+                context.drawImage(
+                    this.image,
+                    cursorSpriteX * (this.imageWidth / 2 - 30),
+                    0,
+                    imageWidth,
+                    this.imageHeight,
+                    canvasX,
+                    canvasY,
+                    this.width,
+                    this.height
+                );
+                context.strokeRect(this.x,this.y,this.width,this.height);
+            }
         }
+        context.fillStyle = "red";
+        context.fillRect(this.x,this.y,2,2);
     }
 };
 
@@ -139,11 +203,14 @@ function isInTarget(event,target) {
     let height = 0;
 
     if (!cursor.isHidden) {
-        // the size of the click detection.
-        const targetSize = 20;
-        x += targetSize / 2;
-        width = height = targetSize;
-    }
+        if (cursor.type == "hand") {
+            // the size of the click detection.
+            const targetSize = 20;
+            x += targetSize / 2;
+            width = height = targetSize;
+        }
+    } 
+
 
     return x + width > target.x && x < target.x + target.width && y + height > target.y && y < target.y + target.height;
 }

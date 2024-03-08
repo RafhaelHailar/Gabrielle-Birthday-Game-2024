@@ -1,11 +1,15 @@
 import { context } from "../screen.js";
-import { addClickHandler, addUnClickHandler, addMouseMoveHandler } from "../eventHandlers.js";
+import { Cursor, addClickHandler, addUnClickHandler, addMouseMoveHandler } from "../eventHandlers.js";
 import PlayerStats from "../player.js";
 import { SchedulesHolder, TimeoutBuilder } from "../timer.js";
 import Game from "./Game.js";
 
 const schedules = new SchedulesHolder();
 const playerStats = new PlayerStats();
+
+// Cursor
+const cursor = new Cursor();
+cursor.setType("pencil");
 
 class DrawingBoard {
 /*
@@ -139,8 +143,8 @@ class Passion extends Game{
                     const b = px[(y * this.drawingBoard.width + x) * 4 + 2];
                     
                     if (r == 0 || g == 0 || b == 0) {
-                       this.drawingBoard.addItem(this.drawingBoard.x + x,this.drawingBoard.y + y);
-                       this.drawingBoard.createNewDrawing();
+          //             this.drawingBoard.addItem(this.drawingBoard.x + x,this.drawingBoard.y + y);
+           //            this.drawingBoard.createNewDrawing();
                        this.drawingBoard.setIsDrawing(true);
                     }
                 }
@@ -155,14 +159,13 @@ class Passion extends Game{
         distractionImg.src = distractionSrc;
         distractionImg.onload = () => {
             this.distractionImgSrc = distractionImg;
-
-            
         }
 
         this.distractionOpacity = 0;
 
         const playerAttentionSpan = 0.1;//playerStats.getAttentionSpan();
         
+        // 'Timeout' for showing the distracting image.
         this.distractionImgTime = new TimeoutBuilder(() => {})
         .setDuration(1500 + (playerAttentionSpan * 10 * 2000))
         .setCallback(() => {
@@ -183,8 +186,8 @@ class Passion extends Game{
         })
         .build();
 
-        
 
+        
     }
      
     // make the game keep track of the event or action that is happening, and call the appropriate actions.
@@ -197,6 +200,9 @@ class Passion extends Game{
          */
         function handleClick({x,y}) {
             this.drawingBoard.setIsDrawing(true);
+            // to put the tip of the pencil to x and y.
+            y = y - cursor.height / 2;
+            x = x - cursor.width / 2;
             this.drawingBoard.addItem(x,y);
         }
 
@@ -211,13 +217,17 @@ class Passion extends Game{
         addUnClickHandler(handleUnClick.bind(this));
 
         function handleMove(event) {
-            const x = event.clientX;
-            const y = event.clientY;
-
+            // to put the tip of the pencil to x and y.
+            const x = event.clientX - cursor.width / 2;
+            const y = event.clientY - cursor.height / 2;
 
             if (this.drawingBoard.isOn(x,y)) {
+                cursor.setType("pencil");
                 this.drawingBoard.addItem(x,y);
-            } else this.drawingBoard.setIsDrawing(false);
+            } else {
+                this.drawingBoard.setIsDrawing(false);
+                cursor.setType("hand");
+            }
         }
 
         addMouseMoveHandler(handleMove.bind(this));
@@ -231,7 +241,7 @@ class Passion extends Game{
             this.drawingBoard.update();
 
             if (this.toDrawImgSrc) {
-           //     context.drawImage(this.toDrawImgSrc,canvas.width - 400,100,300,300);
+                context.drawImage(this.toDrawImgSrc,canvas.width - 400,100,300,300);
              //   context.drawImage(this.toDrawImgSrc,this.drawingBoard.x,this.drawingBoard.y,this.drawingBoard.width,this.drawingBoard.height);
             }
 
@@ -242,7 +252,7 @@ class Passion extends Game{
                 context.restore();
             }
 
-          //  this.distractionImgTime.update();
+       //     this.distractionImgTime.update();
         });
     }
 }

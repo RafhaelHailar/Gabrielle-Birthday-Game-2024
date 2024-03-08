@@ -50,7 +50,7 @@ class Background extends Component{
 class Display {
     constructor() {
         // the current frame that is being displayed in the screen.
-        this._currentFrame = 5;
+        this._currentFrame = 6;
         this._displays = []; // all the displayed for the current frame.
         // all the frames that we have.
         this.frames = [
@@ -105,19 +105,19 @@ class Display {
         let bg = new Background("rgba(150,20,20,1)");
 
         let resumeBtn = new Button(600,350,200,100,"RESUME");
-	let menuBtn = new Button(CENTERX - 200 / 2,canvas.height * 0.3,200,100,"MENU");
+        let menuBtn = new Button(CENTERX - 200 / 2,canvas.height * 0.3,200,100,"MENU");
 
         resumeBtn.attachClick(() => {
             this.updateFrame(this._previousFrame);
         });
 
-	menuBtn.attachClick(() => {
-	    this.updateFrame(1);
-	});
+        menuBtn.attachClick(() => {
+            this.updateFrame(1);
+        });
 
         displays.push(bg);
         displays.push(resumeBtn);
-	displays.push(menuBtn);
+        displays.push(menuBtn);
         this.setDisplays(displays);
     }
 
