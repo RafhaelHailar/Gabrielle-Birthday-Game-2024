@@ -287,6 +287,7 @@ class Display {
         let displays = [];
         
         let bg = new Background("rgba(0,60,0, 0.7)");
+        bg.setImage("../images/game-3-bg.jpg");
         let finishBtn = new Button(
             this.Games.passion.drawingBoard.x + this.Games.passion.drawingBoard.width,
             this.Games.passion.drawingBoard.y + this.Games.passion.drawingBoard.height - canvas.width * 0.05,
@@ -312,7 +313,7 @@ class Display {
         });
 
         // click the button to end the game.
-        this.finishBtn.attachClick(() => {
+        finishBtn.attachClick(() => {
             this.Games.passion.endGame();
         });
 

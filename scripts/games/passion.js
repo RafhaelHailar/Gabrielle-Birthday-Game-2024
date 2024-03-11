@@ -189,6 +189,11 @@ class Passion extends Game{
 
         
     }
+
+    // end the current game.
+    endGame() {
+        alert("ENDED");
+    }
      
     // make the game keep track of the event or action that is happening, and call the appropriate actions.
     addHandlers() {
@@ -241,7 +246,16 @@ class Passion extends Game{
             this.drawingBoard.update();
 
             if (this.toDrawImgSrc) {
-                context.drawImage(this.toDrawImgSrc,this.drawingBoard.x + this.drawingBoard.width + 5,this.drawingBoard.y,canvas.width * 0.18,canvas.width * 0.18);
+                // to draw image canvas position and dimension.
+                const x = this.drawingBoard.x + this.drawingBoard.width + 5;
+                const y = this.drawingBoard.y;
+                const size = canvas.width * 0.18;
+                context.drawImage(this.toDrawImgSrc,x,y,size,size);
+
+                // to draw image border 
+                const offset = 0;
+                context.strokeStyle = "red";
+                context.strokeRect(x - offset,y - offset,size + offset * 2,size + offset * 2); 
             }
 
             if (this.distractionImgSrc) {
