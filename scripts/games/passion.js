@@ -16,8 +16,8 @@ class DrawingBoard {
  * Creates the drawing board of the game, contains all the item that is being drawn.
  */
     constructor() {
-        this.width = 600;
-        this.height = 700;
+        this.width = canvas.width * 0.4;
+        this.height = canvas.height * 0.8;
         this.x = canvas.width / 2 - this.width / 2 - 100;
         this.y = canvas.height / 2 - this.height / 2;
         this.color = "white";
@@ -241,8 +241,7 @@ class Passion extends Game{
             this.drawingBoard.update();
 
             if (this.toDrawImgSrc) {
-                context.drawImage(this.toDrawImgSrc,canvas.width - 400,100,300,300);
-             //   context.drawImage(this.toDrawImgSrc,this.drawingBoard.x,this.drawingBoard.y,this.drawingBoard.width,this.drawingBoard.height);
+                context.drawImage(this.toDrawImgSrc,this.drawingBoard.x + this.drawingBoard.width + 5,this.drawingBoard.y,canvas.width * 0.18,canvas.width * 0.18);
             }
 
             if (this.distractionImgSrc) {
@@ -252,7 +251,7 @@ class Passion extends Game{
                 context.restore();
             }
 
-       //     this.distractionImgTime.update();
+            this.distractionImgTime.update();
         });
     }
 }

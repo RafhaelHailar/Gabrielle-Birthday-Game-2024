@@ -287,16 +287,33 @@ class Display {
         let displays = [];
         
         let bg = new Background("rgba(0,60,0, 0.7)");
+        let finishBtn = new Button(
+            this.Games.passion.drawingBoard.x + this.Games.passion.drawingBoard.width,
+            this.Games.passion.drawingBoard.y + this.Games.passion.drawingBoard.height - canvas.width * 0.05,
+            canvas.width * 0.1,
+            canvas.width * 0.05,
+            "FINISH"
+        );
+        finishBtn.setStyles({
+            textSize: canvas.width * 0.015,
+            textWeight: 700
+        });
 
         this.Games.passion.addHandlers();
         displays.push(bg);
         displays.push(this.Games.passion);
+        displays.push(finishBtn);
 
         // pause frame will be add to displays and remove 
         // must be at the end of all the display.
         this.pauseButton.attachClick(() => {
             this._previousFrame = this._currentFrame;
             this.updateFrame(0);
+        });
+
+        // click the button to end the game.
+        this.finishBtn.attachClick(() => {
+            this.Games.passion.endGame();
         });
 
         displays.push(this.pauseButton);
