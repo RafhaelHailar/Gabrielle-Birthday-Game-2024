@@ -47,6 +47,19 @@ class Button extends Component {
         this._textColor = color;
         this.text.setColor(color);
     }
+    
+
+    /*
+     * Set the new position of the button, changing the position of the text also.
+     * @param {x} The new x position.
+     * @param {y} the new y position.
+     */
+    setPosition(x,y) {
+        this.x = x;
+        this.y = y;
+        this.text.x = x + this.width / 2;
+        this.text.y = y + this.height / 2;
+    }
 
     /*
      * Set the size of the text.

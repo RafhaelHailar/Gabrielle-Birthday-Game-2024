@@ -2,6 +2,7 @@ import Button from "./ui/Button.js";
 import Text from "./ui/Text.js";
 import { Cursor, removeHandlers,addMouseMoveHandler, addClickHandler, addUnClickHandler } from "./eventHandlers.js";
 import Component from "./ui/Component.js";
+import Modal from "./ui/Modal.js";
 
 import Attention from "./games/attention.js";
 import Confidence from "./games/confidence.js";
@@ -50,7 +51,7 @@ class Background extends Component{
 class Display {
     constructor() {
         // the current frame that is being displayed in the screen.
-        this._currentFrame = 6;
+        this._currentFrame = 3;
         this._displays = []; // all the displayed for the current frame.
         // all the frames that we have.
         this.frames = [
@@ -216,6 +217,14 @@ class Display {
         let btn1 = new Button(800,370,200,100,"NEXT");
         let btn2 = new Button(400,370,200,100,"BACK");
 
+        const intro = new Modal(400,100,300,300,"green");
+        intro.addContent(function() {
+            const txt1 = new Text("hello",0,0,40,"white");
+            const btn1 = new Button(10,20,50,50,"hi");
+
+            return [txt1,btn1];
+        });
+
         btn1.setTextColor("yellow");
         btn1.setTextSize(40);
         
@@ -234,6 +243,7 @@ class Display {
         displays.push(btn1);
         displays.push(btn2);
         displays.push(txt1);
+        displays.push(intro);
 
         this.setDisplays(displays);
     }
