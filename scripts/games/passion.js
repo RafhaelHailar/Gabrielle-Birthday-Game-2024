@@ -27,6 +27,7 @@ class DrawingBoard {
         this.items = [[]];
 
         this.isDrawing = false; // tells whether we are drawing on the board.
+        this.isAllowDraw = true; // tells whether we are able to draw on the board.
     }
 
     // Draw the points in the screen, and connect the points of the lines, to draw the lines.
@@ -65,6 +66,11 @@ class DrawingBoard {
         this.isDrawing = isDrawing;
     }
 
+    // set whether we are allowed to draw or not.
+    setIsAllowDraw(isAllow) {
+        this.isAllowDraw = isAllow;
+    }
+
     /*
      * Check whether the mouse is on the board.
      *
@@ -84,9 +90,8 @@ class DrawingBoard {
      * @params {number} y The y position of the mouse.
      */
     addItem(x,y) {
-        if (this.isDrawing) {
-            this.items[this.items.length - 1].push({x,y});
-        }
+        if (!this.isAllowDraw || !this.isDrawing) return;
+        this.items[this.items.length - 1].push({x,y});
     }
 
     // creating a new collection of points, or lines.
@@ -161,6 +166,7 @@ class Passion extends Game{
             this.distractionImgSrc = distractionImg;
         }
 
+        // the opacity of the distraction image.
         this.distractionOpacity = 0;
 
         const playerAttentionSpan = 0.1;//playerStats.getAttentionSpan();
@@ -173,7 +179,8 @@ class Passion extends Game{
                 if (this.distractionOpacity < 1)
                     this.distractionOpacity += 0.1;
             })
-            .setDuration(4000)
+            // the more attention span the 'Player' has the faster the distration image will be remove.
+            .setDuration(4000 - (2000 * playerAttentionSpan))
             .setCallback(() => {
                 this.distractionOpacity = 0;
                 this.distractionImgTime.restart();
@@ -186,8 +193,28 @@ class Passion extends Game{
         })
         .build();
 
+        const playerConfidence = 0.1;//playerStats.getConfidence():
+        // 'Timeout' for disallowing drawing.
+        this.disallowDrawTime = new TimeoutBuilder(() => {})
+        // the lower the confidence the faster it will be disallow drawing
+        // 10 seconds is fastest, 15 seconds is slowest
+        .setDuration(10000 + (playerConfidence * 5000))
+        .setCallback(() => {
+            this.drawingBoard.setIsAllowDraw(false);
+            const allowDrawingTime = new TimeoutBuilder(() => {})
+            // the higher the confidence the fastest it will alow the drawing back.
+            // 3 seconds is slowest, 1 seconds is fastest.
+            .setDuration(3000 - (playerConfidence * 2000))
+            .setCallback(() => {
+                this.drawingBoard.setIsAllowDraw(true)
+                this.disallowDrawTime.restart();
+            })
+            .build();
 
-        
+            schedules.addSchedule(allowDrawingTime);
+        })
+        .build();
+
     }
 
     // end the current game.
@@ -236,8 +263,6 @@ class Passion extends Game{
         }
 
         addMouseMoveHandler(handleMove.bind(this));
-
-
     }
 
     // draws the image that have to be drawn, and the board.
@@ -266,6 +291,18 @@ class Passion extends Game{
             }
 
             this.distractionImgTime.update();
+
+            context.fillStyle = "black";
+            context.font = "20px Arial";
+            context.fillText("Confidence: " + playerStats.getConfidence(),100,canvas.height - 50);
+            context.fillText("Attention Span: " + playerStats.getAttentionSpan(),100,canvas.height - 100);
+
+            this.disallowDrawTime.update();
+            // when the drawing is not allowed, show this text.
+            if (!this.drawingBoard.isAllowDraw && this.drawingBoard.isOn(cursor.x,cursor.y)) {
+                context.font = "15px Monospace";
+                context.fillText("I don't wanna draw, its gonna be terrible anyway.",cursor.x,cursor.y + 20);
+            }
         });
     }
 }
