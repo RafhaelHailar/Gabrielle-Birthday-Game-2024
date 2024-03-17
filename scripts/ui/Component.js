@@ -61,13 +61,14 @@ class Component {
      * Add image as the backgronud of the component.
      *
      * @param {string} imgSrc The source of the image.
+     * @param {object} filters The filters of the image.
      */
-    setImage(imgSrc,{opacity = 1} = {}) {
+    setImage(imgSrc,{opacity = 1,grayscale = 0,brightness = 1} = {}) {
         const image = new Image();
         image.src = imgSrc;
         image.addEventListener("load",(() => {
             this.image = image;
-            this.imageOpacity = opacity;
+            this.imageFilters = {opacity,grayscale,brightness}; 
         }));
     }
 
@@ -84,7 +85,11 @@ class Component {
     // draw the image background if it exists.
     drawImage() {
         context.save();
-        context.globalAlpha = this.imageOpacity;
+        if (this.imageFilters) {
+            const {opacity,grayscale,brightness} = this.imageFilters;
+            context.filter = `brightness(${brightness * 100}%) grayscale(${grayscale * 100}%)`;
+            context.globalAlpha = opacity;
+        }
         if (this.image)
             context.drawImage(this.image,this.x,this.y,this.width,this.height);
         context.restore();

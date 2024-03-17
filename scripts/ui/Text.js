@@ -18,8 +18,10 @@ class Text extends Component {
         this.text = text;
         this.size = size; 
         this.linespace = 35; // the space of the lines when text have collapse in to new line.
-        this.fontFamily = "Arial"; // the font family of the text.
+        this.fontFamily = "Varela Round"; // the font family of the text.
         this.fontWeight = "normal"; // the text font weight
+        this.boxWidth = boxWidth;
+        this.alignment = "center"; // the text alignment, default is center.
     }
 
     /*
@@ -29,6 +31,15 @@ class Text extends Component {
      */
     setBoxWidth(boxWidth) {
         this.boxWidth = boxWidth;
+    }
+
+    /*
+     * Change the horizontal alignment of the text.
+     *
+     * @param {string} alignment The new horizontal alignment.
+     */
+    setAlignment(alignment) {
+        this.alignment = alignment;
     }
     
     /*
@@ -70,11 +81,13 @@ class Text extends Component {
     setStyles({
         family = this.fontFamily,
         weight = this.fontWeight,
-        color = this._color
+        color = this._color,
+        linespace = this.linespace
     } = {}) {
         this.setFontFamily(family);
         this.setFontWeight(weight);
         this.setColor(color);
+        this.setLineSpacing(linespace);
     }
 
     // draw the text.
@@ -86,7 +99,7 @@ class Text extends Component {
         const words = this.text.split(" ");
         context.fillStyle = this._color;
         context.font = `${this.fontWeight} ${this.size}px ${this.fontFamily ? this.fontFamily : 'Arial'}`;
-        context.textAlign = "center";
+        context.textAlign = this.alignment;
         context.textBaseline = "middle";
 
         let size = this.size / 2;

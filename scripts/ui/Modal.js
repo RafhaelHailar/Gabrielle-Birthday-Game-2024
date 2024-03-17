@@ -1,23 +1,20 @@
+import Component from "./Component.js";
 import Button from "./Button.js";
 import {context} from "../screen.js";
 
-class Modal {
+class Modal extends Component{
 /*
  * Creates a modal, which is a rectangular shape thing that contains contents, and a buttons for closing or other actions.
  *
  * @params [x-color] The positions(x,y), dimensions(width,height), and the color.
  */
     constructor(x,y,width,height,color) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.color = color;
+        super(x,y,width,height,color);
         this.image = null;
         this.isHide = false; // tells whether this modal is not shown or not.
         this.contents = []; // the contents inside the modal, which is just other ui's.
         this.closeButton = new Button(x + width / 2 - 100,y + height - 50,200,100,"CLOSE");
-
+        this.closeButton.isHide = false; // tells whether we hide the close button or not.
     }
 
     /*
@@ -78,6 +75,19 @@ class Modal {
         this.contents = contents;
     }
 
+    /* 
+     * Set the style for close button.
+     *
+     * @param {object} The styles that's going to be applied to the close button.
+     *      :properties:
+     *         .isHide Sets whether we show or hide the close button
+     * Note might add some later.
+     */
+    setCloseStyle({isHide} = {}) {
+       this.closeButton.isHide = isHide; 
+    }
+
+
     // set up the modal.
     init() {
         this.setContents();
@@ -90,16 +100,6 @@ class Modal {
         this.init();
     }
 
-    /*
-     * Set the background as an image.
-     *
-     * @param {string} The source of the image.
-     */
-    setImage(image) {
-        this.image = new Image();
-        this.image.src = image;
-    }
-
     // set the hide or not of the modal.
     setIsHide(isHide) {
         this.isHide = isHide;
@@ -107,20 +107,19 @@ class Modal {
 
     draw() {
         if (this.isHide) return;
-        if (this.image) {
-            context.drawImage(this.image,this.x,this.y,this.width,this.height);
-        } else {
-            context.fillStyle = this.color;
-            context.fillRect(this.x,this.y,this.width,this.height);
-        }
+
+        if (this.image) this.drawImage();
+        else this.drawRect();
 
         this.contents.forEach(content => {
             // if the content have an update, update it instead of just draw, otherwise just draw it.
             if (content.update) content.update();
-            else content.draw();
+            else if (content.draw) content.draw();
+            else if (content.drawImage) content.drawImage();
         });
 
-        this.closeButton.update();
+        if (!this.closeButton.isHide)
+            this.closeButton.update();
     }
 }
 

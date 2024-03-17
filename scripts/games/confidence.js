@@ -399,6 +399,9 @@ class Confidence extends Game {
 
         Images.background = new Image();
         Images.background.src = "../../images/game-2-bg.jpg";
+        
+        Images.house = new Image();
+        Images.house.src = "../../images/squirrel-house-game-2.png";
 
         // the player width and height
         const PLAYERWIDTH = GameScreen.width * 0.12;
@@ -515,13 +518,20 @@ class Confidence extends Game {
             schedules.addSchedule(beingDistractedTime); 
         })
         .build();
+
+        super.pause(); // pause the game for introduction modal.
+    }
+
+    // resume the game.
+    resume() {
+        super.resume();
     }
 
     // Contains the logic of the player.
     logic() {
         const player = this.player;
         // total amount to move the screen.
-        const moveScreenY = 1;
+        const moveScreenY = 2;
 
         // when the player reach a point above the screen, the game is finished.
         if (player.y < 200) {
@@ -666,6 +676,10 @@ class Confidence extends Game {
                 canvas.width,
                 canvas.height
             );
+
+            // the house at the end.
+            if (this.screenY == 6400) 
+            context.drawImage(Images.house,GameScreen.x + GameScreen.width / 2 - GameScreen.width * 0.5 / 2,-GameScreen.width * 0.1,GameScreen.width * 0.5,GameScreen.width * 0.5);
         });
 
         context.font = "70px Arial";

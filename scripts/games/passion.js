@@ -118,6 +118,7 @@ class Passion extends Game{
             console.log("FINISHED!");
         });
 
+        super.pause(); // pause the game for instructional modal.
 
         // create the drawing board.
         this.drawingBoard = new DrawingBoard();
@@ -214,7 +215,12 @@ class Passion extends Game{
             schedules.addSchedule(allowDrawingTime);
         })
         .build();
+        
+    }
 
+    // resume the game.
+    resume() {
+        super.resume();
     }
 
     // end the current game.

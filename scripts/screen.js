@@ -52,7 +52,7 @@ class Background extends Component{
 class Display {
     constructor() {
         // the current frame that is being displayed in the screen.
-        this._currentFrame = 4;
+        this._currentFrame = 6;
         this._displays = []; // all the displayed for the current frame.
         // all the frames that we have.
         this.frames = [
@@ -76,11 +76,34 @@ class Display {
 
         // games intruction.
         this.Instructions = {
-            attention: new Modal(canvas.width / 2 - canvas.width * 0.4 / 2,canvas.height * 0.15,canvas.width * 0.4,canvas.width * 0.3,"red"),
+            attention: new Modal(canvas.width / 2 - canvas.width * 0.4 / 2,canvas.height * 0.15,canvas.width * 0.4,canvas.width * 0.25,"black"),
+            confidence: new Modal(canvas.width / 2 - canvas.width * 0.5 / 2,canvas.height * 0.15,canvas.width * 0.5,canvas.width * 0.35,"black"),
+            passion: new Modal(canvas.width / 2 - canvas.width * 0.4 / 2,canvas.height * 0.15,canvas.width * 0.4,canvas.width * 0.25,"black"),
             addContents() {
+                // attention instructional modal
+                this.attention.setImage("../images/modal-bg.webp",{
+                    brightness: 0.8
+                });
+                this.attention.setCloseStyle({isHide: true});
                 this.attention.addContent(() => {
-                    const gameTitle = new Text("Attention Span Game!",this.attention.width / 2,30,canvas.width * 0.02,"blue");
-                    const instructionTxt = new Text("Instruction: Hey sdsds",30,30,30,"green");
+                    const width = this.attention.width;
+                    const height = this.attention.height;
+                    const gameTitle = new Text("Attention Span Game!",width / 2,height * 0.12,width * 0.08,"#F4538A");
+                    const instructionTxt = new Text("Instruction:",width * 0.15,height * 0.25,width * 0.05,"green");
+
+                    const IMAGESIZE = canvas.width * 0.05;
+
+                    const carImage = new Component(canvas.width * 0.01,height * 0.37 - IMAGESIZE / 2,IMAGESIZE,IMAGESIZE,"red");
+                    carImage.setImage("../images/car-toy-game-1.png");
+                    const bearImage = new Component(IMAGESIZE,height * 0.37 - IMAGESIZE / 2,IMAGESIZE,IMAGESIZE,"red");
+                    bearImage.setImage("../images/teddy-bear-game-1.png");
+
+                    const safeText = new Text("- CLICK the TOYS before they disappear.",width * 0.52,height * 0.38,width * 0.03,"red");
+
+                    const phoneImage = new Component(0,height * 0.44,IMAGESIZE,IMAGESIZE,"red");
+                    phoneImage.setImage("../images/cellphone-game-1.png");
+
+                    const dangerText = new Text("- DON'T CLICK the PHONE and let it disappear.",width * 0.56,height * 0.53,width * 0.03,"red");
 
                     const gameStartTimer = new TimeoutBuilder(function() {
                         context.font = "30px Arial";
@@ -96,13 +119,149 @@ class Display {
                     // pause the game start timer.
                     gameStartTimer.pause();
 
-                    const btn1 = new Button(100,370,200,100,"START");
-                    btn1.attachClick(() => {
+                    const startBtn = new Button(width / 2 - width * 0.25 / 2,height - width * 0.23,width * 0.25,width * 0.13,"START");
+                    startBtn.setStyles({
+                        origColor: "red",
+                        textSize: width * 0.04
+                    });
+                    startBtn.attachClick(() => {
                         if (gameStartTimer.isRunning) gameStartTimer.pause();
                         else gameStartTimer.resume(); 
                     });
 
-                    return [gameTitle,instructionTxt,btn1,gameStartTimer];
+                    return [
+                        gameTitle,
+                        instructionTxt,
+                        startBtn,
+                        gameStartTimer,
+                        carImage,
+                        bearImage,
+                        phoneImage,
+                        safeText,
+                        dangerText
+                    ];
+                });
+
+                this.confidence.setImage("../images/modal-bg.webp",{
+                    brightness: 0.8
+                });
+                this.confidence.setCloseStyle({isHide: true});
+                this.confidence.addContent(() => {
+                    const width = this.confidence.width;
+                    const height = this.confidence.height;
+                    const gameTitle = new Text("Confidence Game!",width / 2,height * 0.12,width * 0.06,"#59D5E0");
+                    const instructionTxt = new Text("Instruction:",width * 0.15,height * 0.25,width * 0.04,"green");
+
+                    const IMAGESIZE = canvas.width * 0.05;
+                    
+                    const movementText = new Text("- PRESS arrow up(↑) on your keyboard, to move upward, PRESS arrow down(↓) to move downward, PRESS arrow left(←) to move leftward, and PRESS arrow right(→a) to move rightward.",width * 0.06,height * 0.3,width * 0.02,"red",this.confidence.width - this.confidence.width * 0.2);
+                    movementText.setAlignment("start");
+                    movementText.setStyles({
+                        linespace: canvas.height * 0.015 
+                    });
+
+                    const houseImage = new Component(width * 0.04,height * 0.39,IMAGESIZE,IMAGESIZE,"red");
+                    houseImage.setImage("../images/squirrel-house-game-2.png");
+
+                    const todoText = new Text("- Move up until you get to your house before the time ends",width * 0.43,height * 0.48,width * 0.02,"red");
+
+                    const annoyedCatImage = new Component(width * 0.04,height * 0.55,IMAGESIZE,IMAGESIZE,"red");
+                    annoyedCatImage.setImage("../images/cat-annoyed-cute-rectangle-game-2.png");
+                    const seriousCatImage = new Component(width * 0.14,height * 0.55,IMAGESIZE,IMAGESIZE,"red");
+                    seriousCatImage.setImage("../images/cat-serious-cute-rectangle-game-2.png");
+                    const smileCatImage = new Component(width * 0.24,height * 0.55,IMAGESIZE,IMAGESIZE,"red");
+                    smileCatImage.setImage("../images/cat-smile-cute-rectangle-game-2.png");
+                    const stillCatImage = new Component(width * 0.34,height * 0.55,IMAGESIZE,IMAGESIZE,"red");
+                    stillCatImage.setImage("../images/cat-still-cute-rectangle-game-2.png");
+
+                    const avoidText = new Text("- Avoid getting hit by these cats",width * 0.61,height * 0.63,width * 0.02,"red");
+
+                    const gameStartTimer = new TimeoutBuilder(function() {
+                        context.font = "30px Arial";
+                        context.fillText(3 - Math.floor(this.endCounter / 1000),canvas.width / 2,canvas.height / 2 + 100);
+                    })
+                    .setDuration(3000)
+                    .setCallback(() => {
+                        Games.confidence.resume();
+                        this.confidence.setIsHide(true);
+                    })
+                    .build();
+
+                    // pause the game start timer.
+                    gameStartTimer.pause();
+
+                    const startBtn = new Button(width / 2 - width * 0.25 / 2,height - width * 0.15,width * 0.2,width * 0.1,"START");
+                    startBtn.setStyles({
+                        origColor: "red",
+                        textSize: width * 0.03
+                    });
+                    startBtn.attachClick(() => {
+                        if (gameStartTimer.isRunning) gameStartTimer.pause();
+                        else gameStartTimer.resume(); 
+                    });
+
+                    return [
+                        gameTitle,
+                        instructionTxt,
+                        startBtn,
+                        gameStartTimer,
+                        movementText,
+                        todoText,
+                        houseImage,
+                        annoyedCatImage,
+                        seriousCatImage,
+                        smileCatImage,
+                        stillCatImage,
+                        avoidText
+                    ];
+                });
+
+                this.passion.setImage("../images/modal-bg.webp",{
+                    brightness: 0.8
+                });
+                this.passion.setCloseStyle({isHide: true});
+                this.passion.addContent(() => {
+                    const width = this.passion.width;
+                    const height = this.passion.height;
+                    const gameTitle = new Text("Passion Game!",width / 2,height * 0.12,width * 0.06,"#59D5E0");
+                    const instructionTxt = new Text("Instruction:",width * 0.15,height * 0.25,width * 0.04,"green");
+
+                    const IMAGESIZE = canvas.width * 0.05;
+
+                    const todoTxt = new Text("- DRAW the IMAGE on the RIGHT with your MOUSE on the DRAWING BOARD in the CENTER, by CLICKING the LEFT BUTTON and HOLDING THE CLICK on the DRAWING BOARD, BEFORE the TIME ENDS.",width * 0.08,height * 0.33,width * 0.02,"green",this.confidence.width - this.confidence.width * 0.4);
+                    todoTxt.setAlignment("start");
+
+                    const gameStartTimer = new TimeoutBuilder(function() {
+                        context.font = "30px Arial";
+                        context.fillText(3 - Math.floor(this.endCounter / 1000),canvas.width / 2,canvas.height / 2 + 100);
+                    })
+                    .setDuration(3000)
+                    .setCallback(() => {
+                        Games.passion.resume();
+                        this.passion.setIsHide(true);
+                    })
+                    .build();
+
+                    // pause the game start timer.
+                    gameStartTimer.pause();
+
+                    const startBtn = new Button(width / 2 - width * 0.25 / 2,height - width * 0.15,width * 0.2,width * 0.1,"START");
+                    startBtn.setStyles({
+                        origColor: "red",
+                        textSize: width * 0.03
+                    });
+                    startBtn.attachClick(() => {
+                        if (gameStartTimer.isRunning) gameStartTimer.pause();
+                        else gameStartTimer.resume(); 
+                    });
+
+                    return [
+                        gameTitle,
+                        instructionTxt,
+                        startBtn,
+                        gameStartTimer,
+                        todoTxt
+                    ];
                 });
             }
 
@@ -312,9 +471,14 @@ class Display {
         
         let bg = new Background("#FFF8E3");
 
+        // if the game is not running yet, show the instructions.
+        if (!this.Games.confidence.isRunning)
+            this.Instructions.confidence.init();
+
         this.Games.confidence.addHandlers();
         displays.push(bg);
         displays.push(this.Games.confidence);
+        displays.push(this.Instructions.confidence);
 
         // pause frame will be add to displays and remove 
         // must be at the end of all the display.
@@ -345,10 +509,15 @@ class Display {
             textWeight: 700
         });
 
+        // if the game is not running yet, show the instructions.
+        if (!this.Games.passion.isRunning)
+            this.Instructions.passion.init();
+
         this.Games.passion.addHandlers();
         displays.push(bg);
         displays.push(this.Games.passion);
         displays.push(finishBtn);
+        displays.push(this.Instructions.passion);
 
         // pause frame will be add to displays and remove 
         // must be at the end of all the display.
