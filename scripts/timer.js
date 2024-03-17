@@ -22,7 +22,6 @@ class SchedulesHolder {
     // add the schedule in the collection.
     addSchedule(schedule) {
         this._schedules.push(schedule);
-        console.log(this._schedules.length,schedule);
         setTimeout(() => console.log(this._schedules),100);
     }
 
@@ -81,10 +80,22 @@ class Timeout {
         this.action = action;
         this.isEnd = false; // is this timer ends.
         this.span = 0; // how fast it will be called.
+        
+        this.isRunning = true; //tells whether the 'Timeout' runs or at stop, for activation use or for delaying its run.
     }
 
+    // set how fast the 'Timeout' progress.
     setSpan(span) {
         this.span = span;
+    }
+
+    // set whether to run or not.
+    resume() {
+        this.isRunning = true;
+    }
+
+    pause() {
+        this.isRunning = false;
     }
 
     // re initialize the counters and the boolean that will tell if it ends.
@@ -102,7 +113,7 @@ class Timeout {
         const deltatime = new DeltaTime(); 
         const schedule = new SchedulesHolder();
 
-        if (this.isEnd) return;
+        if (this.isEnd || !this.isRunning) return;
 
         if (this.counter < this.span) this.counter += deltatime.get();
         else {

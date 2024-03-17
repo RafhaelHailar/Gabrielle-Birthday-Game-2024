@@ -24,10 +24,23 @@ class Game {
           //  this.isPlayed = true;
             callback();
         }).build();
+
+        // tells whether the game is running or not.
+        this.isRunning = true;
     }
 
+    pause() {
+        this.isRunning = false;
+    }
+
+    resume() {
+        this.isRunning = true;
+    }
+
+    // reset the game
     restart() {
         this.gameTime.restart();
+        this.pause();
     }
 
     /*
@@ -38,7 +51,9 @@ class Game {
     update(action) {
         if (this.isPlayed) return;
         action();
-        this.gameTime.update();
+
+        if (this.isRunning)
+            this.gameTime.update();
     }
 }
 

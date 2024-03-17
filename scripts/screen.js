@@ -1,6 +1,7 @@
 import Button from "./ui/Button.js";
 import Text from "./ui/Text.js";
 import { Cursor, removeHandlers,addMouseMoveHandler, addClickHandler, addUnClickHandler } from "./eventHandlers.js";
+import { TimeoutBuilder } from "./timer.js";
 import Component from "./ui/Component.js";
 import Modal from "./ui/Modal.js";
 
@@ -51,7 +52,7 @@ class Background extends Component{
 class Display {
     constructor() {
         // the current frame that is being displayed in the screen.
-        this._currentFrame = 3;
+        this._currentFrame = 4;
         this._displays = []; // all the displayed for the current frame.
         // all the frames that we have.
         this.frames = [
@@ -66,11 +67,49 @@ class Display {
         ];
 
         // all the games.
-        this.Games = {
+        // I assign the Games object first to a variable, so the addContents in the Instructions object, can see the games.
+        const Games = {
             attention: new Attention(),
             confidence: new Confidence(),
-            passion: new Passion()
+            passion: new Passion(),
         };
+
+        // games intruction.
+        this.Instructions = {
+            attention: new Modal(canvas.width / 2 - canvas.width * 0.4 / 2,canvas.height * 0.15,canvas.width * 0.4,canvas.width * 0.3,"red"),
+            addContents() {
+                this.attention.addContent(() => {
+                    const gameTitle = new Text("Attention Span Game!",this.attention.width / 2,30,canvas.width * 0.02,"blue");
+                    const instructionTxt = new Text("Instruction: Hey sdsds",30,30,30,"green");
+
+                    const gameStartTimer = new TimeoutBuilder(function() {
+                        context.font = "30px Arial";
+                        context.fillText(3 - Math.floor(this.endCounter / 1000),canvas.width / 2,canvas.height / 2 + 100);
+                    })
+                    .setDuration(3000)
+                    .setCallback(() => {
+                        Games.attention.resume();
+                        this.attention.setIsHide(true);
+                    })
+                    .build();
+
+                    // pause the game start timer.
+                    gameStartTimer.pause();
+
+                    const btn1 = new Button(100,370,200,100,"START");
+                    btn1.attachClick(() => {
+                        if (gameStartTimer.isRunning) gameStartTimer.pause();
+                        else gameStartTimer.resume(); 
+                    });
+
+                    return [gameTitle,instructionTxt,btn1,gameStartTimer];
+                });
+            }
+
+        };
+
+        this.Games = Games;
+        this.Instructions.addContents();
 
         // game cursor
         this.cursor = new Cursor();
@@ -217,14 +256,6 @@ class Display {
         let btn1 = new Button(800,370,200,100,"NEXT");
         let btn2 = new Button(400,370,200,100,"BACK");
 
-        const intro = new Modal(400,100,300,300,"green");
-        intro.addContent(function() {
-            const txt1 = new Text("hello",0,0,40,"white");
-            const btn1 = new Button(10,20,50,50,"hi");
-
-            return [txt1,btn1];
-        });
-
         btn1.setTextColor("yellow");
         btn1.setTextSize(40);
         
@@ -243,7 +274,6 @@ class Display {
         displays.push(btn1);
         displays.push(btn2);
         displays.push(txt1);
-        displays.push(intro);
 
         this.setDisplays(displays);
     }
@@ -259,7 +289,12 @@ class Display {
 
         displays.push(bg);
 
+        // if the game is not running yet, show the instructions.
+        if (!this.Games.attention.isRunning)
+            this.Instructions.attention.init();
+
         displays.push(this.Games.attention);
+        displays.push(this.Instructions.attention);
 
         // pause frame will be add to displays and remove 
         // must be at the end of all the display.

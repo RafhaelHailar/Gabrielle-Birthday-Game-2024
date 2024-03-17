@@ -17,11 +17,14 @@ class Modal {
         this.isHide = false; // tells whether this modal is not shown or not.
         this.contents = []; // the contents inside the modal, which is just other ui's.
         this.closeButton = new Button(x + width / 2 - 100,y + height - 50,200,100,"CLOSE");
-        this.closeButton.attachClick(() => this.isHide = true);
+
     }
 
     /*
      * Add contents of the modal.
+     *
+     * this is my first time I ever write my previous ideas, don't know why I didn't think of it before, I should have done it before, because
+     * it might help me when I get old and for some reason I get amnesia or easily forgot things woo hoo hoo.
      *
      * first idea: I first go with a function that have a rest parameter because I think it will make adding all the contents of this,
      * modal be easier to make the job done, but then I remember that when I'm going to add a button on it I have to attach an handler for that button,
@@ -50,13 +53,17 @@ class Modal {
      * first idea: @param {ui[]} Collections of ui that can be added in the modal.
      * @param {function} getContents A function that gives that contents of this modal.
      */
+
     addContent(getContents) {
         if (!getContents) return;
         if (typeof getContents != "function") throw new Exception("getContents is anything but a function!");
-        
-        const contents = getContents().map(content => {
+        this.getContents = getContents;    
+    }
+
+    setContents() {
+        const contents = this.getContents().map(content => {
            // make every content position relative to the modal.
-           const x = this.x + content.y;
+           const x = this.x + content.x;
            const y = this.y + content.y;
            if (content.setPosition) {
                content.setPosition(x,y);
@@ -68,7 +75,19 @@ class Modal {
            return content;
         });
 
-        this.contents.push(...contents);
+        this.contents = contents;
+    }
+
+    // set up the modal.
+    init() {
+        this.setContents();
+        this.setIsHide(false);
+        this.closeButton.attachClick(() => this.setIsHide(true));
+    }
+
+    // restart the setup
+    restart() {
+        this.init();
     }
 
     /*

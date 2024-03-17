@@ -108,7 +108,6 @@ class Rectangle {
         context.fillStyle = this.color;
         //context.fillRect(this.x,this.y,this.width,this.height);
         if (this.imageSrc) {
-            console.log("hey");
             context.drawImage(this.imageSrc,this.x,this.y,this.width,this.height);
         }
     }
@@ -133,7 +132,15 @@ class Attention extends Game{
 
         // the 'Timeout' for spawning the rectangles
         this.rectsSpawnTime = new TimeoutBuilder(() => this.generateRect()).build();
-            }	
+
+        // at start the game was at paused, because of the instruction then continue after the player decided to start.
+        super.pause();
+    }	
+
+    // continue the game.
+    resume() {
+        super.resume();
+    }
 
     // restart the game
     // resetting the 'Timeout's', 'Collection of rectangle', and 'Player' game stat.
@@ -216,7 +223,9 @@ class Attention extends Game{
                 const rect = this.rects[i];
                 rect.update();
             }
-            this.rectsSpawnTime.update();
+
+            if (this.isRunning)
+                this.rectsSpawnTime.update();
 
             this.finalizeRemoveRects();
         });

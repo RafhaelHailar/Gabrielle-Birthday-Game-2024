@@ -9,7 +9,6 @@ const playerStats = new PlayerStats();
 
 // Cursor
 const cursor = new Cursor();
-cursor.setType("pencil");
 
 class DrawingBoard {
 /*
@@ -118,6 +117,7 @@ class Passion extends Game{
         super(100000,() => {
             console.log("FINISHED!");
         });
+
 
         // create the drawing board.
         this.drawingBoard = new DrawingBoard();
@@ -263,6 +263,8 @@ class Passion extends Game{
         }
 
         addMouseMoveHandler(handleMove.bind(this));
+
+        cursor.setType("pencil");
     }
 
     // draws the image that have to be drawn, and the board.
