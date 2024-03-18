@@ -82,12 +82,14 @@ class Text extends Component {
         family = this.fontFamily,
         weight = this.fontWeight,
         color = this._color,
-        linespace = this.linespace
+        linespace = this.linespace,
+        alignment = this.alignment,
     } = {}) {
         this.setFontFamily(family);
         this.setFontWeight(weight);
         this.setColor(color);
         this.setLineSpacing(linespace);
+        this.setAlignment(alignment);
     }
 
     // draw the text.

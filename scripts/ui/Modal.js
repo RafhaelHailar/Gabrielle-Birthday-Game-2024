@@ -92,7 +92,9 @@ class Modal extends Component{
     init() {
         this.setContents();
         this.setIsHide(false);
-        this.closeButton.attachClick(() => this.setIsHide(true));
+        this.closeButton.attachClick(() => {
+            if(!this.closeButton.isHide) this.setIsHide(true);
+        });
     }
 
     // restart the setup

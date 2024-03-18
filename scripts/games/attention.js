@@ -134,13 +134,8 @@ class Attention extends Game{
         this.rectsSpawnTime = new TimeoutBuilder(() => this.generateRect()).build();
 
         // at start the game was at paused, because of the instruction then continue after the player decided to start.
-        super.pause();
+        this.pause();
     }	
-
-    // continue the game.
-    resume() {
-        super.resume();
-    }
 
     // restart the game
     // resetting the 'Timeout's', 'Collection of rectangle', and 'Player' game stat.

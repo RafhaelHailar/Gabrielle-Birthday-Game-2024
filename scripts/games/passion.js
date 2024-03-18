@@ -218,13 +218,9 @@ class Passion extends Game{
         
     }
 
-    // resume the game.
-    resume() {
-        super.resume();
-    }
-
     // end the current game.
     endGame() {
+        if (!this.isRunning) return;
         alert("ENDED");
     }
      
@@ -259,7 +255,7 @@ class Passion extends Game{
             const x = event.clientX - cursor.width / 2;
             const y = event.clientY - cursor.height / 2;
 
-            if (this.drawingBoard.isOn(x,y)) {
+            if (this.isRunning && this.drawingBoard.isOn(x,y)) {
                 cursor.setType("pencil");
                 this.drawingBoard.addItem(x,y);
             } else {
@@ -298,18 +294,20 @@ class Passion extends Game{
                 context.restore();
             }
 
-            this.distractionImgTime.update();
+            if (this.isRunning) {
+                this.distractionImgTime.update();
 
-            context.fillStyle = "black";
-            context.font = "20px Arial";
-            context.fillText("Confidence: " + playerStats.getConfidence(),100,canvas.height - 50);
-            context.fillText("Attention Span: " + playerStats.getAttentionSpan(),100,canvas.height - 100);
+                context.fillStyle = "black";
+                context.font = "20px Arial";
+                context.fillText("Confidence: " + playerStats.getConfidence(),100,canvas.height - 50);
+                context.fillText("Attention Span: " + playerStats.getAttentionSpan(),100,canvas.height - 100);
 
-            this.disallowDrawTime.update();
-            // when the drawing is not allowed, show this text.
-            if (!this.drawingBoard.isAllowDraw && this.drawingBoard.isOn(cursor.x,cursor.y)) {
-                context.font = "15px Monospace";
-                context.fillText("I don't wanna draw, its gonna be terrible anyway.",cursor.x,cursor.y + 20);
+                this.disallowDrawTime.update();
+                // when the drawing is not allowed, show this text.
+                if (!this.drawingBoard.isAllowDraw && this.drawingBoard.isOn(cursor.x,cursor.y)) {
+                    context.font = "15px Monospace";
+                    context.fillText("I don't wanna draw, its gonna be terrible anyway.",cursor.x,cursor.y + 20);
+                }
             }
         });
     }

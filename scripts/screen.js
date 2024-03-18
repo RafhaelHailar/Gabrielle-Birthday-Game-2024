@@ -9,6 +9,8 @@ import Attention from "./games/attention.js";
 import Confidence from "./games/confidence.js";
 import Passion from "./games/passion.js";
 
+import PlayerStats from "./player.js";
+
 let canvas,context;
 canvas = document.querySelector("#canvas");
 context = canvas.getContext("2d");
@@ -19,6 +21,7 @@ canvas.height = innerHeight;
 const CENTERX = canvas.width / 2;
 const CENTERY = canvas.height / 2;
 
+const playerStats = new PlayerStats();
 
 class Background extends Component{
 /*
@@ -176,6 +179,9 @@ class Display {
 
                     const avoidText = new Text("- Avoid getting hit by these cats",width * 0.61,height * 0.63,width * 0.02,"red");
 
+                    const effectText = new Text("EFFECTS - LOWER ATTENTION SPAN, the FREQUENT the CATS DISAPPEAR to your SIGHT.",width * 0.48,height * 0.72,width * 0.02,"blue");
+                    const statsText = new Text(`ATTENTION SPAN: ${playerStats.getAttentionSpan() * 100}%`,width / 2,height * 0.77,width * 0.02,"yellow");
+
                     const gameStartTimer = new TimeoutBuilder(function() {
                         context.font = "30px Arial";
                         context.fillText(3 - Math.floor(this.endCounter / 1000),canvas.width / 2,canvas.height / 2 + 100);
@@ -190,7 +196,7 @@ class Display {
                     // pause the game start timer.
                     gameStartTimer.pause();
 
-                    const startBtn = new Button(width / 2 - width * 0.25 / 2,height - width * 0.15,width * 0.2,width * 0.1,"START");
+                    const startBtn = new Button(width / 2 - width * 0.25 / 2,height - width * 0.1,width * 0.2,width * 0.1,"START");
                     startBtn.setStyles({
                         origColor: "red",
                         textSize: width * 0.03
@@ -212,7 +218,9 @@ class Display {
                         seriousCatImage,
                         smileCatImage,
                         stillCatImage,
-                        avoidText
+                        avoidText,
+                        effectText,
+                        statsText
                     ];
                 });
 
@@ -228,8 +236,20 @@ class Display {
 
                     const IMAGESIZE = canvas.width * 0.05;
 
-                    const todoTxt = new Text("- DRAW the IMAGE on the RIGHT with your MOUSE on the DRAWING BOARD in the CENTER, by CLICKING the LEFT BUTTON and HOLDING THE CLICK on the DRAWING BOARD, BEFORE the TIME ENDS.",width * 0.08,height * 0.33,width * 0.02,"green",this.confidence.width - this.confidence.width * 0.4);
-                    todoTxt.setAlignment("start");
+                    const todoTxt = new Text("- DRAW the IMAGE on the RIGHT with your MOUSE on the DRAWING BOARD in the CENTER, by CLICKING the LEFT BUTTON and HOLDING THE CLICK on the DRAWING BOARD, BEFORE the TIME ENDS.",width * 0.08,height * 0.33,width * 0.02,"red",this.confidence.width - this.confidence.width * 0.4);
+                    todoTxt.setStyles({
+                        alignment: "start",
+                        linespace: height * 0.03    
+                    });
+
+                    const effectTxt = new Text("* EFFECT: LOW ATTENTION SPAN, the FREQUENT the MONKEY SHOWS UP on the BOARD. LOW CONFIDENCE, the FREQUENT you will not be able to DRAW. ",width * 0.08,height * 0.48,width * 0.02,"red",this.confidence.width - this.confidence.width * 0.4);
+                    effectTxt.setStyles({
+                        alignment: "start",
+                        linespace: height * 0.03
+                    });
+
+                    const attentionTxt = new Text(`ATTENTION SPAN: ${playerStats.getAttentionSpan() * 100}%`,width / 2,height * 0.65,width * 0.02,"yellow",this.confidence.width - this.confidence.width * 0.4);
+                    const confidenceTxt = new Text(`CONFIDENCE: ${playerStats.getConfidence() * 100}%`,width / 2,height * 0.69,width * 0.02,"yellow",this.confidence.width - this.confidence.width * 0.4);
 
                     const gameStartTimer = new TimeoutBuilder(function() {
                         context.font = "30px Arial";
@@ -242,12 +262,14 @@ class Display {
                     })
                     .build();
 
+
                     // pause the game start timer.
                     gameStartTimer.pause();
 
-                    const startBtn = new Button(width / 2 - width * 0.25 / 2,height - width * 0.15,width * 0.2,width * 0.1,"START");
+                    const startBtn = new Button(width / 2 - width * 0.2 / 2,height - width * 0.15,width * 0.2,width * 0.1,"START");
                     startBtn.setStyles({
                         origColor: "red",
+                        hoverColor: "green",
                         textSize: width * 0.03
                     });
                     startBtn.attachClick(() => {
@@ -260,7 +282,10 @@ class Display {
                         instructionTxt,
                         startBtn,
                         gameStartTimer,
-                        todoTxt
+                        todoTxt,
+                        effectTxt,
+                        attentionTxt,
+                        confidenceTxt
                     ];
                 });
             }
