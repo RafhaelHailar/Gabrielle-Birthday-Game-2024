@@ -9,6 +9,7 @@ const schedules = new SchedulesHolder();
 
 // player statistics
 const playerStats = new PlayerStats();
+playerStats.setAttentionSpan(0.5);
 
 // game screen
 let GameScreen;
@@ -117,9 +118,8 @@ class Player extends MovableRect {
     // After sometime of getting damaged, if the player is not getting damage anymore,
     // it set whether we receive damage to false, unless we keep getting damage.
     damage() {
-        if (!this.receivingDamage) {
-            Confidence.value -= 0.02;
-        } 
+        Confidence.value -= 0.0002;
+
         this.color = "white";
         this.image = this.damageImage;
         if (this.isSafeId != null) {
@@ -495,7 +495,7 @@ class Confidence extends Game {
         // create a 'Timeout' that will make some changes in the opacity of the blocks, after sometime.
         // how frequent the opacity is reduce is based on the 'attention span' of the Player.
         this.lowAttentionSpanEffectTime = new TimeoutBuilder(()=>{})
-        .setDuration(2000 + (attentionSpan * 10 * 300))
+        .setDuration(2000 + (attentionSpan * 1000 * 15))
         .setCallback(() => {
             // a 'Timeout' that will reduce the opacity of the blocks continuesly until sometime.
             let beingDistractedTime = new TimeoutBuilder(() => {
@@ -682,9 +682,11 @@ class Confidence extends Game {
             context.drawImage(Images.house,GameScreen.x + GameScreen.width / 2 - GameScreen.width * 0.5 / 2,-GameScreen.width * 0.1,GameScreen.width * 0.5,GameScreen.width * 0.5);
         });
 
-        context.font = "70px Arial";
-        context.fillText(this.screenY,100,400);
-        context.fillText(Confidence.value.toFixed(2),100,600); 
+        context.fillStyle = "red";
+        context.font = "40px Monospace";
+        context.fillText(`Screen Level: ${this.screenY}`,canvas.width * 0.12,canvas.height * 0.4);
+        context.fillText(`Attention Span: ${Math.floor(playerStats.getAttentionSpan() * 100)}%`,canvas.width * 0.15,canvas.height / 2 - 30); 
+        context.fillText(`Confidence: ${Math.floor(Confidence.value * 100)}%`,canvas.width * 0.13,canvas.height / 2 + 15); 
     }
 }
 

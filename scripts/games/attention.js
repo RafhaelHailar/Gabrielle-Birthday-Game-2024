@@ -226,9 +226,9 @@ class Attention extends Game{
         });
         
         context.fillStyle = "red";
-        context.font = "20px Arial";
+        context.font = "30px Monospace";
         context.fillText(this.rects.length,100,100);
-        context.fillText(`player attention span: ${this.attentionSpan.toFixed(2)}`,200,canvas.height - 100);
+        context.fillText(`Attention Span: ${Math.floor(this.attentionSpan * 100)}%`,canvas.width * 0.15,canvas.height / 2);
     }
 }
 

@@ -57,6 +57,11 @@ class Component {
         this.hoverColor = color;
     }
 
+    // set whether its hidden or not, for disabling event handler when it was hidden.
+    setIsHide(isHide) {
+        this.isHide = isHide;
+    }
+
     /*
      * Add image as the backgronud of the component.
      *
@@ -78,7 +83,10 @@ class Component {
      * @param {function} action The action that will happen when the display is clicked.
      */
     attachClick(action) {
-        const clickOnButton = action.bind(this);
+        const clickOnButton = (() => {
+            if (!this.isHide)
+            action.bind(this)();
+        });
         addClickHandler(clickOnButton,{target: this});
     }
     

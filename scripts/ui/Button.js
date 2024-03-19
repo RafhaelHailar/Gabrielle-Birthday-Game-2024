@@ -84,6 +84,7 @@ class Button extends Component {
      *          "textSize The new size of the text.
      *          "textWeight The new weight of the text.
      *          "textFamily The new font family of the text.
+     *          "isHide Tells whether the button is gonna be hidden or not.
      */
     setStyles({
         color = this._color,
@@ -92,7 +93,8 @@ class Button extends Component {
         textColor = this._textColor,
         textSize = this._textSize,
         textWeight = this.text.fontWeight,
-        textFamily = this.text.fontFamily
+        textFamily = this.text.fontFamily,
+        isHide = this.isHide
     } = {}) {
         this.setColor(color);
         this.setOriginalColor(origColor);
@@ -101,6 +103,7 @@ class Button extends Component {
         this.setTextSize(textSize);
         this.text.setFontWeight(textWeight);
         this.text.setFontFamily(textFamily);
+        this.setIsHide(isHide);
     }
 
 

@@ -1,7 +1,7 @@
 import Button from "./ui/Button.js";
 import Text from "./ui/Text.js";
 import { Cursor, removeHandlers,addMouseMoveHandler, addClickHandler, addUnClickHandler } from "./eventHandlers.js";
-import { TimeoutBuilder } from "./timer.js";
+import { TimeoutBuilder, SchedulesHolder } from "./timer.js";
 import Component from "./ui/Component.js";
 import Modal from "./ui/Modal.js";
 
@@ -10,6 +10,8 @@ import Confidence from "./games/confidence.js";
 import Passion from "./games/passion.js";
 
 import PlayerStats from "./player.js";
+
+const schedules = new SchedulesHolder();
 
 let canvas,context;
 canvas = document.querySelector("#canvas");
@@ -55,7 +57,7 @@ class Background extends Component{
 class Display {
     constructor() {
         // the current frame that is being displayed in the screen.
-        this._currentFrame = 6;
+        this._currentFrame = 4;
         this._displays = []; // all the displayed for the current frame.
         // all the frames that we have.
         this.frames = [
@@ -63,9 +65,9 @@ class Display {
             this.menuFrame.bind(this),
             this.frame2.bind(this),
             this.frame3.bind(this),
-            this.frame4.bind(this),
-            this.frame5.bind(this),
-            this.frame6.bind(this),
+            this.attentionFrame.bind(this),
+            this.confidenceFrame.bind(this),
+            this.passionFrame.bind(this),
             this.showCreditsFrame.bind(this)
         ];
 
@@ -125,6 +127,7 @@ class Display {
                     const startBtn = new Button(width / 2 - width * 0.25 / 2,height - width * 0.23,width * 0.25,width * 0.13,"START");
                     startBtn.setStyles({
                         origColor: "red",
+                        hoverColor: "green",
                         textSize: width * 0.04
                     });
                     startBtn.attachClick(() => {
@@ -196,9 +199,10 @@ class Display {
                     // pause the game start timer.
                     gameStartTimer.pause();
 
-                    const startBtn = new Button(width / 2 - width * 0.25 / 2,height - width * 0.1,width * 0.2,width * 0.1,"START");
+                    const startBtn = new Button(width / 2 - width * 0.2 / 2,height - width * 0.12,width * 0.2,width * 0.1,"START");
                     startBtn.setStyles({
                         origColor: "red",
+                        hoverColor: "green",
                         textSize: width * 0.03
                     });
                     startBtn.attachClick(() => {
@@ -231,7 +235,7 @@ class Display {
                 this.passion.addContent(() => {
                     const width = this.passion.width;
                     const height = this.passion.height;
-                    const gameTitle = new Text("Passion Game!",width / 2,height * 0.12,width * 0.06,"#59D5E0");
+                    const gameTitle = new Text("Passion Game!",width / 2,height * 0.12,width * 0.06,"#F5DD61");
                     const instructionTxt = new Text("Instruction:",width * 0.15,height * 0.25,width * 0.04,"green");
 
                     const IMAGESIZE = canvas.width * 0.05;
@@ -242,7 +246,7 @@ class Display {
                         linespace: height * 0.03    
                     });
 
-                    const effectTxt = new Text("* EFFECT: LOW ATTENTION SPAN, the FREQUENT the MONKEY SHOWS UP on the BOARD. LOW CONFIDENCE, the FREQUENT you will not be able to DRAW. ",width * 0.08,height * 0.48,width * 0.02,"red",this.confidence.width - this.confidence.width * 0.4);
+                    const effectTxt = new Text("* EFFECT: LOW ATTENTION SPAN, the FREQUENT the MONKEY SHOWS UP on the BOARD. LOW CONFIDENCE, the FREQUENT you will not be able to DRAW. ",width * 0.08,height * 0.52,width * 0.02,"blue",this.confidence.width - this.confidence.width * 0.4);
                     effectTxt.setStyles({
                         alignment: "start",
                         linespace: height * 0.03
@@ -300,6 +304,11 @@ class Display {
         
         // a pause button that can change the frame to paused, stopping the current game we are playing.
         this.pauseButton = new Button(50,40,100,60,"PAUSE");
+        this.pauseButton.setStyles({
+            origColor: "#59D5E0",
+            hoverColor: "blue",
+            textColor: "#F5DD61"
+        });
         this.isPause = false;
 
         // initialize the current frame.
@@ -326,22 +335,87 @@ class Display {
     pauseFrame() {
         let displays = [];
 
-        let bg = new Background("rgba(150,20,20,1)");
+        let bg = new Background("rgba(150,20,20,1)");   
+        bg.setImage("../images/pause-bg.jpg");
 
-        let resumeBtn = new Button(600,350,200,100,"RESUME");
-        let menuBtn = new Button(CENTERX - 200 / 2,canvas.height * 0.3,200,100,"MENU");
+        const BUTTONWIDTH = canvas.width * 0.1;
+        const BUTTONHEIGHT = canvas.height * 0.1;
 
+        let resumeBtn = new Button(CENTERX - BUTTONWIDTH / 2,CENTERY + canvas.height * 0.005,BUTTONWIDTH,BUTTONHEIGHT,"RESUME");
+
+        resumeBtn.setStyles({
+            origColor: "#4CCD99",
+            hoverColor: "rgb(50,190,130)",
+            textColor: "white",
+            textSize: canvas.width * 0.015
+        });
+
+        let menuBtn = new Button(CENTERX - BUTTONWIDTH / 2,CENTERY - canvas.height * 0.15,BUTTONWIDTH,BUTTONHEIGHT,"MENU");
+
+        menuBtn.setStyles({
+            origColor: "#FFC700",
+            hoverColor: "rgb(230,180,0)",
+            textColor: "white",
+            textSize: canvas.width * 0.015
+        });
+
+        const menuModal = new Modal(CENTERX - canvas.width * 0.4 / 2,canvas.height * 0.15,canvas.width * 0.4,canvas.width * 0.25,"black");
+        menuModal.setCloseStyle({isHide: true});
+        menuModal.setImage("../images/modal-bg.webp",{
+            brightness: 0.8
+        });
+
+        menuModal.addContent(() => {
+            const width = menuModal.width;
+            const height = menuModal.height;
+            const questionText = new Text("Go Back to Menu ?",width / 2,height * 0.12,width * 0.06,"#F5DD61");
+            const yesBtn = new Button(width / 2 - BUTTONWIDTH / 2,height / 2 - BUTTONHEIGHT,BUTTONWIDTH,BUTTONHEIGHT,"YES");
+            
+            yesBtn.setStyles({
+                origColor: "rgb(0,240,0)",
+                hoverColor: "rgb(0,150,0)",
+                textColor: "white",
+                textSize: canvas.width * 0.015
+            });
+
+            yesBtn.attachClick(() => {
+                this.updateFrame(1);
+            });
+
+            const noBtn = new Button(width / 2 - BUTTONWIDTH / 2,height / 2 + BUTTONHEIGHT / 2,BUTTONWIDTH,BUTTONHEIGHT,"NO");
+
+            noBtn.setStyles({
+                origColor: "rgb(240,0,0)",
+                hoverColor: "rgb(150,0,0)",
+                textColor: "white",
+                textSize: canvas.width * 0.015
+            });
+
+            noBtn.attachClick(() => {
+                menuModal.setIsHide(true);
+                menuBtn.setIsHide(false);
+                resumeBtn.setIsHide(false);
+            });
+
+            return [questionText,yesBtn,noBtn];
+        });
+        menuModal.init();
+        menuModal.setIsHide(true);
+    
         resumeBtn.attachClick(() => {
             this.updateFrame(this._previousFrame);
         });
 
         menuBtn.attachClick(() => {
-            this.updateFrame(1);
+            menuModal.setIsHide(false);
+            menuBtn.setIsHide(true);
+            resumeBtn.setIsHide(true);
         });
 
         displays.push(bg);
         displays.push(resumeBtn);
         displays.push(menuBtn);
+        displays.push(menuModal);
         this.setDisplays(displays);
     }
 
@@ -462,7 +536,7 @@ class Display {
         this.setDisplays(displays);
     }
 
-    frame4() {
+    attentionFrame() {
         let displays = [];
 
         let bg = new Background("#FFFAFA");
@@ -491,7 +565,7 @@ class Display {
         this.setDisplays(displays);
     }
 
-    frame5() {
+    confidenceFrame() {
         let displays = [];
         
         let bg = new Background("#FFF8E3");
@@ -517,7 +591,7 @@ class Display {
     }
 
 
-    frame6() {
+    passionFrame() {
         let displays = [];
         
         let bg = new Background("rgba(0,60,0, 0.7)");
@@ -530,6 +604,8 @@ class Display {
             "FINISH"
         );
         finishBtn.setStyles({
+            origColor: "#4CCD99",
+            hoverColor: "#4CCD99",
             textSize: canvas.width * 0.015,
             textWeight: 700
         });
@@ -597,8 +673,15 @@ class Display {
     updateFrame(frame) {
         this._currentFrame = frame;
          
+        this.pauseButton.setColor(this.pauseButton.origColor);
+
+        schedules.clearSchedules();
+
         this.removeDisplays();
         removeHandlers();
+
+        
+
         this.displayFrame();
         this.cursor.add();
     }
@@ -612,6 +695,10 @@ class Display {
             if (display.update)
                 display.update();
             else if (display.draw) display.draw();
+
+            for (let game in this.Games) {
+                if (this.Games[game] == display && display.isPlayed) this.updateFrame(this._currentFrame + 1);
+            }
         }
 
         this.cursor.draw();

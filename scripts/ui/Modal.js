@@ -102,9 +102,13 @@ class Modal extends Component{
         this.init();
     }
 
-    // set the hide or not of the modal.
+    // set the hide or not of the modal and hide its content.
     setIsHide(isHide) {
         this.isHide = isHide;
+        this.contents.forEach(content => {
+            if (content.setIsHide) 
+                content.setIsHide(isHide);
+        });
     }
 
     draw() {

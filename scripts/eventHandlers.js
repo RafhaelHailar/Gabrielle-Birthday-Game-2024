@@ -136,11 +136,14 @@ class Cursor {
                     this.width,
                     this.height
                 );
-                context.strokeRect(this.x,this.y,this.width,this.height);
+                
+                // the bounding box of the cursor.
+                // context.strokeRect(this.x,this.y,this.width,this.height);
             }
         }
-        context.fillStyle = "red";
-        context.fillRect(this.x,this.y,2,2);
+        // the target of the hand cursor.
+   //     context.fillStyle = "red";
+   //     context.fillRect(this.x,this.y,2,2);
     }
 };
 

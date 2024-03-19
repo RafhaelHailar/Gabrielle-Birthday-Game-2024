@@ -36,10 +36,10 @@ class DrawingBoard {
             items.push(...this.items[i]);
         }
 
+        context.fillStyle = "black";
         items.forEach(item => {
             const POINTSIZE = 0.7;
             context.beginPath();
-            context.fillStyle = "black";
             context.arc(item.x,item.y,POINTSIZE,0,Math.PI * 2);
             context.fill();
         });
@@ -234,10 +234,13 @@ class Passion extends Game{
          */
         function handleClick({x,y}) {
             this.drawingBoard.setIsDrawing(true);
+
             // to put the tip of the pencil to x and y.
             y = y - cursor.height / 2;
             x = x - cursor.width / 2;
-            this.drawingBoard.addItem(x,y);
+
+            if (this.drawingBoard.isOn(x,y))
+                this.drawingBoard.addItem(x,y);
         }
 
         addClickHandler(handleClick.bind(this),{target: this.drawingBoard});
@@ -298,9 +301,9 @@ class Passion extends Game{
                 this.distractionImgTime.update();
 
                 context.fillStyle = "black";
-                context.font = "20px Arial";
-                context.fillText("Confidence: " + playerStats.getConfidence(),100,canvas.height - 50);
-                context.fillText("Attention Span: " + playerStats.getAttentionSpan(),100,canvas.height - 100);
+                context.font = "30px Monospace";
+                context.fillText(`Confidence: ${playerStats.getConfidence() * 100}%`,canvas.width * 0.09,canvas.height / 2 - 30);
+                context.fillText(`Attention Span: ${playerStats.getAttentionSpan() * 100}%`,canvas.width * 0.1,canvas.height / 2 + 15);
 
                 this.disallowDrawTime.update();
                 // when the drawing is not allowed, show this text.

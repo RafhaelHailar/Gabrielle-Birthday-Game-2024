@@ -33,6 +33,11 @@ class SchedulesHolder {
             this._schedules.splice(index,1);
     }
 
+    // remove all schedules.
+    clearSchedules() {
+        this._schedules = [];
+    }
+
     // update all the schedule.
     checkSchedules() {
         this._schedules.forEach(schedule => {
