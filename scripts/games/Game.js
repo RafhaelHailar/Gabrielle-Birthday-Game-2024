@@ -21,7 +21,7 @@ class Game {
         })
         .setDuration(GAMELENGTH)
         .setCallback(() => {
-          //  this.isPlayed = true;
+            this.isPlayed = true;
             callback();
         }).build();
 

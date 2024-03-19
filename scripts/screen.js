@@ -57,7 +57,7 @@ class Background extends Component{
 class Display {
     constructor() {
         // the current frame that is being displayed in the screen.
-        this._currentFrame = 4;
+        this._currentFrame = 11;
         this._displays = []; // all the displayed for the current frame.
         // all the frames that we have.
         this.frames = [
@@ -66,8 +66,13 @@ class Display {
             this.frame2.bind(this),
             this.frame3.bind(this),
             this.attentionFrame.bind(this),
+            this.frame5.bind(this),
+            this.frame6.bind(this),
             this.confidenceFrame.bind(this),
+            this.frame8.bind(this),
+            this.frame9.bind(this),
             this.passionFrame.bind(this),
+            this.frame11.bind(this),
             this.showCreditsFrame.bind(this)
         ];
 
@@ -479,24 +484,32 @@ class Display {
     frame2() {
         let displays = [];
         
+        const width = canvas.width;
+        const height = canvas.height;
+        
         let bg = new Background("rgba(0,0,0, 0.7)");
+        bg.setImage("../images/story-bg.jpg");
         let txt1 = new Text(
             `In the year 2020, where everyone was inside their house feeling dark, sad, and hopeless because of the COVID-19 pandemic.
              there born a beautiful, wonderful, and spectacular girl who in turn give light to a family
              and her name is Gabrielle.`
-        , canvas.width / 2, canvas.height * 0.25, 40, "red",1200);
+        , width / 2, height * 0.25, width * 0.025, "red",width * 0.7);
         txt1.setLineSpacing(20);
 
-        let btn1 = new Button(canvas.width / 2 - 200 / 2,canvas.height * 0.4,200,100,"NEXT");
-        btn1.setTextColor("yellow");
-        btn1.setTextSize(40);
+        let nextBtn = new Button(width / 2 - width * 0.1 / 2,height * 0.5,width * 0.1,height * 0.1,"NEXT");
+        nextBtn.setStyles({
+            origColor: "#FFC700",
+            hoverColor: "#CCA300",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
 
-        btn1.attachClick(() => {
+        nextBtn.attachClick(() => {
             this.updateFrame(this._currentFrame + 1);
         });
 
         displays.push(bg);
-        displays.push(btn1);
+        displays.push(nextBtn);
         displays.push(txt1);
         this.setDisplays(displays);
     }
@@ -504,33 +517,45 @@ class Display {
     frame3() {
         let displays = [];
 
+        const width = canvas.width;
+        const height = canvas.height;
+
         let bg = new Background("rgba(0,0,0, 0.7)");
+        bg.setImage("../images/story-bg.jpg");
         let txt1 = new Text(
-            `Growing up as a child in this time of the world full of distraction, her life is somewhat normal
+            `Growing up as a child in this time of the world full of DISTRACTION, her life is somewhat normal
              except for the  24/7 screen time she received.Nevertheless she was still loved or admired by her family.`
-        ,700, 150, 40, "red", 1200);
+        ,width / 2, height * 0.25, width * 0.025, "red",width * 0.7);
         txt1.setLineSpacing(20);
 
-        let btn1 = new Button(800,370,200,100,"NEXT");
-        let btn2 = new Button(400,370,200,100,"BACK");
+        let nextBtn = new Button(width / 2 + width * 0.1 / 2,height * 0.5,width * 0.1,height * 0.1,"NEXT");
+        let backBtn = new Button(width / 2 - width * 0.1 * 1.5,height * 0.5,width * 0.1,height * 0.1,"BACK");
 
-        btn1.setTextColor("yellow");
-        btn1.setTextSize(40);
+        nextBtn.setStyles({
+            origColor: "#FFC700",
+            hoverColor: "#CCA300",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
+
+        backBtn.setStyles({
+            origColor: "#007F73",
+            hoverColor: "#003D52",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
         
-        btn2.setTextColor("red");
-        btn2.setTextSize(40);
-
-        btn1.attachClick(() => {
+        nextBtn.attachClick(() => {
             this.updateFrame(this._currentFrame + 1);
         });
 
-        btn2.attachClick(() => {
+        backBtn.attachClick(() => {
             this.updateFrame(this._currentFrame - 1);
         });
 
         displays.push(bg);
-        displays.push(btn1);
-        displays.push(btn2);
+        displays.push(nextBtn);
+        displays.push(backBtn);
         displays.push(txt1);
 
         this.setDisplays(displays);
@@ -565,6 +590,85 @@ class Display {
         this.setDisplays(displays);
     }
 
+    frame5() {
+        let displays = [];
+        
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        let bg = new Background("rgba(0,0,0, 0.7)");
+        bg.setImage("../images/story-bg.jpg");
+        let txt1 = new Text(
+            `As a curious,lovely, and brave child, she strives to reach high places.Almost always climbing on desks, chairs, and any other else that
+             are too high for a little kid.`
+        , width / 2, height * 0.25, width * 0.025, "red",width * 0.7);
+        txt1.setLineSpacing(20);
+
+        let nextBtn = new Button(width / 2 - width * 0.1 / 2,height * 0.5,width * 0.1,height * 0.1,"NEXT");
+        nextBtn.setStyles({
+            origColor: "#FFC700",
+            hoverColor: "#CCA300",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
+
+        nextBtn.attachClick(() => {
+            this.updateFrame(this._currentFrame + 1);
+        });
+
+        displays.push(bg);
+        displays.push(nextBtn);
+        displays.push(txt1);
+        this.setDisplays(displays);
+    }
+
+    frame6() {
+        let displays = [];
+
+        const width = canvas.width;
+        const height = canvas.height;
+
+        let bg = new Background("rgba(0,0,0, 0.7)");
+        bg.setImage("../images/story-bg.jpg");
+        let txt1 = new Text(
+            `Starting climbing at first it was kind of DIFFICULT and SCARY for her, but after successfully climbing 
+             some high places she gained BRAVERY, therefore everytime she sees high places instead of feeling scared she instead felt excite.`
+        ,width / 2, height * 0.25, width * 0.025, "red",width * 0.7);
+        txt1.setLineSpacing(20);
+
+        let nextBtn = new Button(width / 2 + width * 0.1 / 2,height * 0.5,width * 0.1,height * 0.1,"NEXT");
+        let backBtn = new Button(width / 2 - width * 0.1 * 1.5,height * 0.5,width * 0.1,height * 0.1,"BACK");
+
+        nextBtn.setStyles({
+            origColor: "#FFC700",
+            hoverColor: "#CCA300",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
+
+        backBtn.setStyles({
+            origColor: "#007F73",
+            hoverColor: "#003D52",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
+        
+        nextBtn.attachClick(() => {
+            this.updateFrame(this._currentFrame + 1);
+        });
+
+        backBtn.attachClick(() => {
+            this.updateFrame(this._currentFrame - 1);
+        });
+
+        displays.push(bg);
+        displays.push(nextBtn);
+        displays.push(backBtn);
+        displays.push(txt1);
+
+        this.setDisplays(displays);
+    }
+
     confidenceFrame() {
         let displays = [];
         
@@ -590,6 +694,84 @@ class Display {
         this.setDisplays(displays);
     }
 
+    frame8() {
+        let displays = [];
+        
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        let bg = new Background("rgba(0,0,0, 0.7)");
+        bg.setImage("../images/story-bg.jpg");
+        let txt1 = new Text(
+            `Every kid have some activities that interest them, that later on becomes their hobbies. Hobbies that in later
+             time become their great skills.`
+        , width / 2, height * 0.25, width * 0.025, "red",width * 0.7);
+        txt1.setLineSpacing(20);
+
+        let nextBtn = new Button(width / 2 - width * 0.1 / 2,height * 0.5,width * 0.1,height * 0.1,"NEXT");
+        nextBtn.setStyles({
+            origColor: "#FFC700",
+            hoverColor: "#CCA300",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
+
+        nextBtn.attachClick(() => {
+            this.updateFrame(this._currentFrame + 1);
+        });
+
+        displays.push(bg);
+        displays.push(nextBtn);
+        displays.push(txt1);
+        this.setDisplays(displays);
+    }
+
+    frame9() {
+        let displays = [];
+
+        const width = canvas.width;
+        const height = canvas.height;
+
+        let bg = new Background("rgba(0,0,0, 0.7)");
+        bg.setImage("../images/story-bg.jpg");
+        let txt1 = new Text(
+            `Gabrielle sees what she likes to be DRAWING, she like to draw everywhere scribing on the wall,
+             on the chair, tables, EVERYWHERE, she will even draw on your face if she got a chance.`
+        ,width / 2, height * 0.25, width * 0.025, "red",width * 0.7);
+        txt1.setLineSpacing(20);
+
+        let nextBtn = new Button(width / 2 + width * 0.1 / 2,height * 0.5,width * 0.1,height * 0.1,"NEXT");
+        let backBtn = new Button(width / 2 - width * 0.1 * 1.5,height * 0.5,width * 0.1,height * 0.1,"BACK");
+
+        nextBtn.setStyles({
+            origColor: "#FFC700",
+            hoverColor: "#CCA300",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
+
+        backBtn.setStyles({
+            origColor: "#007F73",
+            hoverColor: "#003D52",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
+        
+        nextBtn.attachClick(() => {
+            this.updateFrame(this._currentFrame + 1);
+        });
+
+        backBtn.attachClick(() => {
+            this.updateFrame(this._currentFrame - 1);
+        });
+
+        displays.push(bg);
+        displays.push(nextBtn);
+        displays.push(backBtn);
+        displays.push(txt1);
+
+        this.setDisplays(displays);
+    }
 
     passionFrame() {
         let displays = [];
@@ -633,6 +815,41 @@ class Display {
         });
 
         displays.push(this.pauseButton);
+        this.setDisplays(displays);
+    }
+
+    frame11() {
+        let displays = [];
+        
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        let bg = new Background("rgba(0,0,0, 0.7)");
+        bg.setImage("../images/story-bg.jpg");
+        let txt1 = new Text(
+            `Cute Little Gabrielle, when you were able to read this I want you to know or rather I hope you already know and feel, or I hope we already made you know and feel, that you are a fantastic
+            and marvelous kid that you are special as what you are.We know that you can achieve whatever it is in the world when you give your FOCUS on how to achieve it, and trying to achieve it, when you
+            got a BRAVERY and COURAGENESS to face every struggle or challenge the you will encounter in your journey, I hope we can give you that COURAGE as you gave it to us, and also achieving it with a
+            little bit help of INTEREST or PASSION on what you want to achieve, We want you to realize that we are always here for you and you can DO it, whatever struggles you are currently facing on
+            and that We LOVE you.`
+        , width / 2, height * 0.1, width * 0.025, "rgb(150,0,0)",width * 0.7);
+        txt1.setLineSpacing(20);
+
+        let nextBtn = new Button(width / 2 - width * 0.1 / 2,height * 0.8,width * 0.1,height * 0.1,"CONTINUE");
+        nextBtn.setStyles({
+            origColor: "#FFC700",
+            hoverColor: "#CCA300",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
+
+        nextBtn.attachClick(() => {
+            this.updateFrame(this._currentFrame + 1);
+        });
+
+        displays.push(bg);
+        displays.push(nextBtn);
+        displays.push(txt1);
         this.setDisplays(displays);
     }
 

@@ -122,7 +122,7 @@ class Attention extends Game{
     constructor() {
         // pass the action that will happen when the game ends.
         // gamelength, callback
-        super(60000,function() {
+        super(60000,() => {
             playerStats.setAttentionSpan(this.attentionSpan); 
         });
 
