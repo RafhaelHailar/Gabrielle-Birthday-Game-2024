@@ -699,6 +699,7 @@ class Confidence extends Game {
     update() {
         super.update(() => {
             this.logic();
+
             this.lowAttentionSpanEffectTime.update();
 
             // remember the drawing state of the game.

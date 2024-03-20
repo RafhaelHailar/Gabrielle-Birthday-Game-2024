@@ -1,5 +1,5 @@
 import { canvas, context } from "../screen.js";
-import { addClickHandler } from "../eventHandlers.js";
+import { addClickHandler, removeClickHandler } from "../eventHandlers.js";
 import { TimeoutBuilder } from "../timer.js";
 import PlayerStats from "../player.js";
 import Game from "./Game.js";
@@ -73,7 +73,7 @@ class Rectangle {
 
         // create the click handler.
         const handleClick = this.manageClick.bind(this);
-        addClickHandler(handleClick, { target: this });
+        this.handlerId = addClickHandler(handleClick, { target: this });
     }
 
     /*
@@ -96,16 +96,22 @@ class Rectangle {
     manageClick() {
         if (this.type == "DANGER") this.isBad = true; 
 
+        this.remove();
+
         // add it to the attention items information.
         Attention.Collections[this.name].clicked++;
 
-        this.remove();
+        console.log("balls");
     }
 
     // Remove the rectangle.
     remove() {
+        if (!this.isToRemove) 
+            removeClickHandler(this.handlerId);
+
         this.isToRemove = true;
-    }
+        
+   }
 
     // Reduce the size of the rectangle until it was gone.
     shrink() {
@@ -248,8 +254,7 @@ class Attention extends Game{
                 rect.update();
             }
 
-            if (this.isRunning)
-                this.rectsSpawnTime.update();
+            this.rectsSpawnTime.update();
 
             this.finalizeRemoveRects();
         });

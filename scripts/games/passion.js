@@ -119,7 +119,7 @@ class Passion extends Game{
     constructor() {
         //gamelength, callback
         super(100000,() => {
-            console.log("FINISHED!");
+            this.drawingBoard.update(); 
 
             // get the result of the drawing board.
             const drawingBoardResult = context.getImageData(this.drawingBoard.x,this.drawingBoard.y,this.drawingBoard.width,this.drawingBoard.height);
@@ -133,8 +133,6 @@ class Passion extends Game{
 
             Passion.drawingResult = tempCanvas.toDataURL();
         });
-
-
 
         super.pause(); // pause the game for instructional modal.
 
@@ -315,20 +313,18 @@ class Passion extends Game{
                 context.restore();
             }
 
-            if (this.isRunning) {
-                this.distractionImgTime.update();
+            this.distractionImgTime.update();
 
-                context.fillStyle = "black";
-                context.font = "30px Monospace";
-                context.fillText(`Confidence: ${playerStats.getConfidence() * 100}%`,canvas.width * 0.09,canvas.height / 2 - 30);
-                context.fillText(`Attention Span: ${playerStats.getAttentionSpan() * 100}%`,canvas.width * 0.1,canvas.height / 2 + 15);
+            context.fillStyle = "black";
+            context.font = "30px Monospace";
+            context.fillText(`Confidence: ${playerStats.getConfidence() * 100}%`,canvas.width * 0.09,canvas.height / 2 - 30);
+            context.fillText(`Attention Span: ${playerStats.getAttentionSpan() * 100}%`,canvas.width * 0.1,canvas.height / 2 + 15);
 
-                this.disallowDrawTime.update();
-                // when the drawing is not allowed, show this text.
-                if (!this.drawingBoard.isAllowDraw && this.drawingBoard.isOn(cursor.x,cursor.y)) {
-                    context.font = "15px Monospace";
-                    context.fillText("I don't wanna draw, its gonna be terrible anyway.",cursor.x,cursor.y + 20);
-                }
+            this.disallowDrawTime.update();
+            // when the drawing is not allowed, show this text.
+            if (!this.drawingBoard.isAllowDraw && this.drawingBoard.isOn(cursor.x,cursor.y)) {
+                context.font = "15px Monospace";
+                context.fillText("I don't wanna draw, its gonna be terrible anyway.",cursor.x,cursor.y + 20);
             }
         });
     }

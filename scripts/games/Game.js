@@ -56,10 +56,11 @@ class Game {
      */
     update(action) {
         if (this.isPlayed) return;
-        action();
 
-        if (this.isRunning)
+        if (this.isRunning) {
+            action();
             this.gameTime.update();
+        }
     }
 }
 

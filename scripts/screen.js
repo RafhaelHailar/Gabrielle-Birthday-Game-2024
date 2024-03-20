@@ -61,7 +61,7 @@ class Background extends Component{
 class Display {
     constructor() {
         // the current frame that is being displayed in the screen.
-        this._currentFrame = 12;
+        this._currentFrame = 1;
         this._displays = []; // all the displayed for the current frame.
         // all the frames that we have.
         this.frames = [

@@ -6,6 +6,10 @@ const mouseUnClickFunctions = [];
 const keyDownFunctions = [];
 const keyUpFunctions = [];
 
+let toBeRemoveClickFunctions = [];
+
+let clickHandlerId = 0; // the id of the click handlers, it will iterate so every id is unique.
+
 // creates the cursor.
 class Cursor {
     static instance = null;
@@ -156,6 +160,8 @@ class Cursor {
  *
  * @param {function} handler The handler function.
  * @param {object} {target} The target object that contains a position and dimension we wanted the action to happen to. 
+ *
+ * @param {number} The handler id.
  */
 
 
@@ -166,7 +172,15 @@ function addClickHandler(handler,{target} = {}) {
         // call the handler passing the position x and y of the mouse.
         handler({x: event.clientX,y: event.clientY});
     }
-    mouseClickFunctions.push(result);
+
+    let handlerId = clickHandlerId++; // iterate to produce new id for other handlers
+
+    mouseClickFunctions.push({
+        id: handlerId, 
+        action: result
+    });
+
+    return handlerId;
 }
 
 function addMouseMoveHandler(handler,{target} = {}) {
@@ -189,6 +203,40 @@ function addKeyDownHandler(handler) {
 
 function addKeyUpHandler(handler) {
     keyUpFunctions.push(handler);
+}
+
+
+/*
+ * Removes a click handler based on id.
+ *
+ * @param {number} id The id of the click handler.
+ */
+function removeClickHandler(id) {
+    // we use binary search bcoz, why not? yeahh I learned it so I use it. lol
+    let min = 0;
+    let max = mouseClickFunctions.length;
+
+    let index = null; // the handler we are looking for.
+   
+    while (max >= min) {
+        let mid = Math.floor((min + max) / 2);
+        let midItem = mouseClickFunctions[mid];
+        let midId = midItem.id;
+        
+        if (midId > id) max = mid - 1;
+        else if (midId < id) min = mid + 1;
+        else {
+            index = mid;
+            break;
+        }
+    }
+
+    // throw an error if a handler with such id is not found.
+    if (index == null) {
+        throw new Error("Click handler with id: " + id + " is not found.");
+    }
+
+    mouseClickFunctions[index].toBeRemove = true; // set to be remove handler.
 }
 
 /*
@@ -237,12 +285,27 @@ window.addEventListener("mousemove",function(event) {
     mouseMoveFunctions.forEach(func => {
         func(event);
     });
+
+   
 });
 
 window.addEventListener("mousedown",function(event) {
+    // reset the to be remove functions.
+    toBeRemoveClickFunctions = [];
+
     mouseClickFunctions.forEach(func => {
-        func(event);
+        if (func.toBeRemove) toBeRemoveClickFunctions.push(func);
+        else func.action(event);
+
     });
+
+    // remove the to be remove handlers.
+    for (let i = 0;i < toBeRemoveClickFunctions.length;i++) {
+        const index = mouseClickFunctions.indexOf(toBeRemoveClickFunctions[i]);
+            
+        // remove the click handler
+        mouseClickFunctions.splice(index,1);
+    }
 });
 
 window.addEventListener("mouseup",function(event) {
@@ -264,4 +327,4 @@ window.addEventListener("keyup",function(event) {
 });
 
 
-export { Cursor, addMouseMoveHandler, addClickHandler, addUnClickHandler, addKeyDownHandler,addKeyUpHandler,removeHandlers };
+export { Cursor, addMouseMoveHandler, addClickHandler, addUnClickHandler, addKeyDownHandler,addKeyUpHandler,removeHandlers, removeClickHandler};
