@@ -101,6 +101,9 @@ class Component {
         if (this.image)
             context.drawImage(this.image,this.x,this.y,this.width,this.height);
         context.restore();
+
+        if (this.borderColor) 
+            this.drawBorder();
     }
 
 
@@ -109,6 +112,21 @@ class Component {
         context.fillStyle = this._color;
         context.fillRect(this.x,this.y,this.width,this.height);
     }   
+
+    // draw the border of the component.
+    drawBorder() {
+        context.strokeStyle = this.borderColor;
+        context.strokeRect(this.x,this.y,this.width,this.height);
+    }
+
+    /*
+     * Add border for the component
+     *
+     * @param {color} The color of border.
+     */
+    borderize(color) {
+        this.borderColor = color;
+    }
 
     /*
      * Change the color of the display to a target color slowly.

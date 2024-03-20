@@ -17,7 +17,7 @@ class Game {
                 const end = Math.floor(GAMELENGTH / 1000);
                 context.fillStyle = "#FF3333";
                 context.font = "70px Arial";
-                context.fillText(`${counter} / ${end}`,canvas.width - 200,100);
+                context.fillText(`${counter.toString().padStart(2,"0")} / ${end}`,canvas.width * 0.9,canvas.height * 0.1);
         })
         .setDuration(GAMELENGTH)
         .setCallback(() => {
@@ -29,6 +29,7 @@ class Game {
         this.isRunning = true;
     }
 
+    // their names tell what they do.
     pause() {
         this.isRunning = false;
     }
@@ -41,6 +42,11 @@ class Game {
     restart() {
         this.gameTime.restart();
         this.pause();
+    }
+
+    // end the game
+    end() {
+       this.gameTime.end(); 
     }
 
     /*

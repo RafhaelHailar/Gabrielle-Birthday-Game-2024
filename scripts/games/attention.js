@@ -36,7 +36,15 @@ class Rectangle {
         this.color = type == "SAFE" ? "#ADD8E6" : "rgb(255,76,48)";
         
         const imageCollection = this.images[type];
+
         const imageName = imageCollection[Math.floor(Math.random() * imageCollection.length)];
+
+        // the item name
+        this.name = imageName.split("-")[0];
+
+        // add it to the attention items information.
+        Attention.Collections[this.name].total++;
+
         const image = new Image();
         image.src = "../../images/" + imageName + "-game-1.png";
         image.addEventListener("load",() => {
@@ -87,6 +95,10 @@ class Rectangle {
      */
     manageClick() {
         if (this.type == "DANGER") this.isBad = true; 
+
+        // add it to the attention items information.
+        Attention.Collections[this.name].clicked++;
+
         this.remove();
     }
 
@@ -119,6 +131,23 @@ class Rectangle {
 }
 
 class Attention extends Game{
+
+    // information about the items that shows up.
+    static Collections = {
+        car: {
+            total: 0,
+            clicked: 0
+        },
+        teddy: {
+            total: 0,
+            clicked: 0
+        },
+        cellphone: {
+            total: 0,
+            clicked: 0
+        },
+    };
+
     constructor() {
         // pass the action that will happen when the game ends.
         // gamelength, callback

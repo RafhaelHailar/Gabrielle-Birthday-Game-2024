@@ -195,6 +195,9 @@ class Block extends MovableRect {
                     default:
                        throw new Error(`Block subtype of ${type}: ${subtype} is not a valid subtype`);
                }
+
+               // the name of this cat in the collection in the Confidence class.
+               this.name = "smile";
                break;
            case "skipping":
                 switch (subtype) {
@@ -210,6 +213,9 @@ class Block extends MovableRect {
                     default:
                        throw new Error(`Block subtype of ${type}: ${subtype} is not a valid subtype`);
                }
+
+               // the name of this cat in the collection in the Confidence class.
+               this.name = "still";
                break;
            case "speederD":
                this.incrementing = 0;
@@ -224,7 +230,15 @@ class Block extends MovableRect {
                        throw new Error(`Block subtype of ${type}: ${subtype} is not a valid subtype`);
 
                }
+
+               // the name of this cat in the collection in the Confidence class.
+               if (this.color == "cyan")
+                   this.name = "annoyed";
+               else this.name = "serious";
+               break;
        }
+
+       
 
        // this.velocityX = 0;
        this.prevVelocityX = this.velocityX; // the initial velocity of the block, for resetting the velocity of it.
@@ -372,6 +386,53 @@ class Confidence extends Game {
     
     // the total amount of 'confidence' that will be set to the Player stats.
     static value = 1;
+
+
+    // the informations about the cats and player in the game.
+    // for gathering some data about the player of the game to make the game even more fun in the future.
+    static Collections = {
+        annoyed: {
+            a: {
+                totalHit: 0
+            },
+            b: {
+                totalHit: 0
+            },
+        },
+        serious: {
+            a: {
+                totalHit: 0
+            },
+            b: {
+                totalHit: 0
+            },
+        },
+        still: {
+            a: {
+                totalHit: 0
+            },
+            b: {
+                totalHit: 0
+            },
+            c: {
+                totalHit: 0
+            },
+        },
+        smile: {
+            a: {
+                totalHit: 0
+            },
+            b: {
+                totalHit: 0
+            },
+            c: {
+                totalHit: 0
+            },
+            d: {
+                totalHit: 0
+            },
+        }
+    };
 
     constructor() {
         // add the action that will be perform when the game ends.
@@ -569,6 +630,15 @@ class Confidence extends Game {
         for (let i = 0;i < this.allBlocks.length;i++) {
             const block = this.allBlocks[i];
             if (block.isCollideWith(this.player)) {
+               
+               const cat = Confidence.Collections[block.name];
+               if (cat) {
+                   const target = cat[block.subtype];
+                   if (target) {
+                       target.totalHit++;
+                   }
+               }
+
                this.player.damage();
             }
         }

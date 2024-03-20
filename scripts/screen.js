@@ -13,6 +13,10 @@ import PlayerStats from "./player.js";
 
 const schedules = new SchedulesHolder();
 
+// start time of the game.
+let gameStartTime = Date.now();
+let gameEndTime = gameStartTime;
+
 let canvas,context;
 canvas = document.querySelector("#canvas");
 context = canvas.getContext("2d");
@@ -57,7 +61,7 @@ class Background extends Component{
 class Display {
     constructor() {
         // the current frame that is being displayed in the screen.
-        this._currentFrame = 11;
+        this._currentFrame = 12;
         this._displays = []; // all the displayed for the current frame.
         // all the frames that we have.
         this.frames = [
@@ -66,13 +70,17 @@ class Display {
             this.frame2.bind(this),
             this.frame3.bind(this),
             this.attentionFrame.bind(this),
-            this.frame5.bind(this),
+            this.attentionResultFrame.bind(this),
             this.frame6.bind(this),
+            this.frame7.bind(this),
             this.confidenceFrame.bind(this),
-            this.frame8.bind(this),
-            this.frame9.bind(this),
-            this.passionFrame.bind(this),
+            this.confidenceResultFrame.bind(this),
+            this.frame10.bind(this),
             this.frame11.bind(this),
+            this.passionFrame.bind(this),
+            this.passionResultFrame.bind(this),
+            this.finishGameFrame.bind(this),
+            this.messageFrame.bind(this),
             this.showCreditsFrame.bind(this)
         ];
 
@@ -90,6 +98,8 @@ class Display {
             confidence: new Modal(canvas.width / 2 - canvas.width * 0.5 / 2,canvas.height * 0.15,canvas.width * 0.5,canvas.width * 0.35,"black"),
             passion: new Modal(canvas.width / 2 - canvas.width * 0.4 / 2,canvas.height * 0.15,canvas.width * 0.4,canvas.width * 0.25,"black"),
             addContents() {
+                const IMAGESIZE = canvas.width * 0.05;
+
                 // attention instructional modal
                 this.attention.setImage("../images/modal-bg.webp",{
                     brightness: 0.8
@@ -100,8 +110,6 @@ class Display {
                     const height = this.attention.height;
                     const gameTitle = new Text("Attention Span Game!",width / 2,height * 0.12,width * 0.08,"#F4538A");
                     const instructionTxt = new Text("Instruction:",width * 0.15,height * 0.25,width * 0.05,"green");
-
-                    const IMAGESIZE = canvas.width * 0.05;
 
                     const carImage = new Component(canvas.width * 0.01,height * 0.37 - IMAGESIZE / 2,IMAGESIZE,IMAGESIZE,"red");
                     carImage.setImage("../images/car-toy-game-1.png");
@@ -163,7 +171,6 @@ class Display {
                     const gameTitle = new Text("Confidence Game!",width / 2,height * 0.12,width * 0.06,"#59D5E0");
                     const instructionTxt = new Text("Instruction:",width * 0.15,height * 0.25,width * 0.04,"green");
 
-                    const IMAGESIZE = canvas.width * 0.05;
                     
                     const movementText = new Text("- PRESS arrow up(↑) on your keyboard, to move upward, PRESS arrow down(↓) to move downward, PRESS arrow left(←) to move leftward, and PRESS arrow right(→a) to move rightward.",width * 0.06,height * 0.3,width * 0.02,"red",this.confidence.width - this.confidence.width * 0.2);
                     movementText.setAlignment("start");
@@ -242,8 +249,6 @@ class Display {
                     const height = this.passion.height;
                     const gameTitle = new Text("Passion Game!",width / 2,height * 0.12,width * 0.06,"#F5DD61");
                     const instructionTxt = new Text("Instruction:",width * 0.15,height * 0.25,width * 0.04,"green");
-
-                    const IMAGESIZE = canvas.width * 0.05;
 
                     const todoTxt = new Text("- DRAW the IMAGE on the RIGHT with your MOUSE on the DRAWING BOARD in the CENTER, by CLICKING the LEFT BUTTON and HOLDING THE CLICK on the DRAWING BOARD, BEFORE the TIME ENDS.",width * 0.08,height * 0.33,width * 0.02,"red",this.confidence.width - this.confidence.width * 0.4);
                     todoTxt.setStyles({
@@ -374,7 +379,8 @@ class Display {
             const width = menuModal.width;
             const height = menuModal.height;
             const questionText = new Text("Go Back to Menu ?",width / 2,height * 0.12,width * 0.06,"#F5DD61");
-            const yesBtn = new Button(width / 2 - BUTTONWIDTH / 2,height / 2 - BUTTONHEIGHT,BUTTONWIDTH,BUTTONHEIGHT,"YES");
+            const infoText = new Text("your current games progress will reset.",width / 2,height * 0.2,width * 0.03,"rgb(255,0,0)");
+            const yesBtn = new Button(width / 2 - BUTTONWIDTH / 2,height / 2 - BUTTONHEIGHT,BUTTONWIDTH,BUTTONHEIGHT,"OKAY");
             
             yesBtn.setStyles({
                 origColor: "rgb(0,240,0)",
@@ -402,7 +408,7 @@ class Display {
                 resumeBtn.setIsHide(false);
             });
 
-            return [questionText,yesBtn,noBtn];
+            return [infoText,questionText,yesBtn,noBtn];
         });
         menuModal.init();
         menuModal.setIsHide(true);
@@ -590,7 +596,90 @@ class Display {
         this.setDisplays(displays);
     }
 
-    frame5() {
+    attentionResultFrame() {
+        let displays = [];
+        
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const IMAGESIZE = width * 0.07;
+
+        const Collections = Attention.Collections;
+        
+        const bg = new Background("rgba(0,0,0, 0.7)");
+        bg.setImage("../images/result-bg.jpg");
+
+        const titleTxt = new Text("Attention Game Result",width / 2, height * 0.15, width * 0.05, "#F4538A",width * 0.7);
+
+        const attentionTxt = new Text(
+            `Attention Span Left: ${(playerStats.getAttentionSpan() * 100).toFixed(2)}%`
+        , width / 2, height * 0.25, width * 0.025, "blue",width * 0.7);
+
+        const itemsTxt = new Text("Items",width * 0.12, height * 0.34, width * 0.025, "orange",width * 0.7);
+        const clickedTotalTxt = new Text("Clicked Total:",width * 0.32, height * 0.34, width * 0.025, "green",width * 0.7);
+        const notClickedTotalTxt = new Text("NOT Clicked Total:",width * 0.58, height * 0.34, width * 0.025, "red",width * 0.7);
+        const itemsTotalTxt = new Text("Item Total:",width * 0.83, height * 0.34, width * 0.025, "blue",width * 0.7);
+
+
+        const carImage = new Component(width * 0.08,height * 0.41 - IMAGESIZE / 2,IMAGESIZE,IMAGESIZE,"red");
+        carImage.setImage("../images/car-toy-game-1.png");
+
+        const bearImage = new Component(width * 0.08,height * 0.52 - IMAGESIZE / 2,IMAGESIZE,IMAGESIZE,"red");
+        bearImage.setImage("../images/teddy-bear-game-1.png");
+
+        const phoneImage = new Component(width * 0.08,height * 0.58,IMAGESIZE,IMAGESIZE,"red");
+        phoneImage.setImage("../images/cellphone-game-1.png");
+
+        const carClickedTxt = new Text(String(Collections.car.clicked),width * 0.32, height * 0.42, width * 0.025, "green",width * 0.7);
+        const teddyClickedTxt = new Text(String(Collections.teddy.clicked),width * 0.32, height * 0.53, width * 0.025, "green",width * 0.7);
+        const phoneClickedTxt = new Text(String(Collections.cellphone.clicked),width * 0.32, height * 0.65, width * 0.025, "green",width * 0.7);
+
+        const carNotClickedTxt = new Text(String(Collections.car.total - Collections.car.clicked),width * 0.58, height * 0.42, width * 0.025, "red",width * 0.7);
+        const teddyNotClickedTxt = new Text(String(Collections.teddy.total - Collections.teddy.clicked),width * 0.58, height * 0.53, width * 0.025, "red",width * 0.7);
+        const phoneNotClickedTxt = new Text(String(Collections.cellphone.total - Collections.cellphone.clicked),width * 0.58, height * 0.65, width * 0.025, "red",width * 0.7);
+
+        const carTotalClickedTxt = new Text(String(Collections.car.total),width * 0.83, height * 0.42, width * 0.025, "blue",width * 0.7);
+        const teddyTotalClickedTxt = new Text(String(Collections.teddy.total),width * 0.83, height * 0.53, width * 0.025, "blue",width * 0.7);
+        const phoneTotalClickedTxt = new Text(String(Collections.cellphone.total),width * 0.83, height * 0.65, width * 0.025, "blue",width * 0.7);
+
+        const nextBtn = new Button(width / 2 - width * 0.1 / 2,height * 0.75,width * 0.1,height * 0.1,"CONTINUE");
+        nextBtn.setStyles({
+            origColor: "#FFC700",
+            hoverColor: "#CCA300",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
+
+        nextBtn.attachClick(() => {
+            this.updateFrame(this._currentFrame + 1);
+        });
+
+        displays = [
+            bg,
+            nextBtn,
+            attentionTxt,
+            titleTxt,
+            itemsTxt,
+            clickedTotalTxt,
+            notClickedTotalTxt,
+            itemsTotalTxt,
+            carImage,
+            bearImage,
+            phoneImage,
+            carClickedTxt,
+            teddyClickedTxt,
+            phoneClickedTxt,
+            carNotClickedTxt,
+            teddyNotClickedTxt,
+            phoneNotClickedTxt,
+            carTotalClickedTxt,
+            teddyTotalClickedTxt,
+            phoneTotalClickedTxt,
+        ]
+        this.setDisplays(displays);
+    }
+
+    frame6() {
         let displays = [];
         
         const width = canvas.width;
@@ -622,7 +711,7 @@ class Display {
         this.setDisplays(displays);
     }
 
-    frame6() {
+    frame7() {
         let displays = [];
 
         const width = canvas.width;
@@ -694,7 +783,105 @@ class Display {
         this.setDisplays(displays);
     }
 
-    frame8() {
+
+    confidenceResultFrame() {
+        let displays = [];
+        
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const IMAGESIZE = width * 0.07;
+
+        const Collections = Confidence.Collections;
+
+        const bg = new Background("rgba(0,0,0, 0.7)");
+        bg.setImage("../images/result-bg.jpg");
+
+        const titleTxt = new Text("Confidence Game Result",width / 2, height * 0.15, width * 0.05, "#59D5E0");
+
+        const confidenceTxt = new Text(`Confidence Left: ${(playerStats.getConfidence() * 100).toFixed(2)}%`,width / 2,height * 0.25,width * 0.025,"blue");
+
+        const catsTxt = new Text("Cats:",width * 0.17, height * 0.42, width * 0.05, "orange");
+
+        const hitsTxt = new Text("Total Hit", width / 2,height * 0.32,width * 0.025,"red");
+
+        const typesTxt = new Text("Types", width * 0.05,height * 0.72,width * 0.02,"green");
+
+        const annoyedCatImage = new Component(width * 0.3,height * 0.35,IMAGESIZE,IMAGESIZE,"red");
+        annoyedCatImage.setImage("../images/cat-annoyed-cute-rectangle-game-2.png");
+        const seriousCatImage = new Component(width * 0.45,height * 0.35,IMAGESIZE,IMAGESIZE,"red");
+        seriousCatImage.setImage("../images/cat-serious-cute-rectangle-game-2.png");
+        const smileCatImage = new Component(width * 0.75,height * 0.35,IMAGESIZE,IMAGESIZE,"red");
+        smileCatImage.setImage("../images/cat-smile-cute-rectangle-game-2.png");
+        const stillCatImage = new Component(width * 0.6,height * 0.35,IMAGESIZE,IMAGESIZE,"red");
+        stillCatImage.setImage("../images/cat-still-cute-rectangle-game-2.png");
+
+        const aTxt = new Text("A", width * 0.15,height * 0.58,width * 0.04,"green");
+        const bTxt = new Text("B", width * 0.15,height * 0.68,width * 0.04,"green");
+        const cTxt = new Text("C", width * 0.15,height * 0.78,width * 0.04,"green");
+        const dTxt = new Text("D", width * 0.15,height * 0.88,width * 0.04,"green");
+
+        const annoyedAHitTxt = new Text(String(Collections.annoyed.a.totalHit), width * 0.33,height * 0.57,width * 0.035,"red");
+        const annoyedBHitTxt = new Text(String(Collections.annoyed.b.totalHit), width * 0.33,height * 0.67,width * 0.035,"red");
+
+        const seriousAHitTxt = new Text(String(Collections.serious.a.totalHit), width * 0.48,height * 0.57,width * 0.035,"red");
+        const seriousBHitTxt = new Text(String(Collections.serious.b.totalHit), width * 0.48,height * 0.67,width * 0.035,"red");
+
+        const stillAHitTxt = new Text(String(Collections.still.a.totalHit), width * 0.63,height * 0.57,width * 0.035,"red");
+        const stillBHitTxt = new Text(String(Collections.still.b.totalHit), width * 0.63,height * 0.67,width * 0.035,"red");
+        const stillCHitTxt = new Text(String(Collections.still.c.totalHit), width * 0.63,height * 0.77,width * 0.035,"red");
+
+        const smileAHitTxt = new Text(String(Collections.smile.a.totalHit), width * 0.78,height * 0.57,width * 0.035,"red");
+        const smileBHitTxt = new Text(String(Collections.smile.b.totalHit), width * 0.78,height * 0.67,width * 0.035,"red");
+        const smileCHitTxt = new Text(String(Collections.smile.c.totalHit), width * 0.78,height * 0.77,width * 0.035,"red");
+        const smileDHitTxt = new Text(String(Collections.smile.d.totalHit), width * 0.78,height * 0.87,width * 0.035,"red");
+
+
+        const nextBtn = new Button(width * 0.85,height * 0.8,width * 0.1,height * 0.1,"CONTINUE");
+        nextBtn.setStyles({
+            origColor: "#FFC700",
+            hoverColor: "#CCA300",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
+
+        nextBtn.attachClick(() => {
+            this.updateFrame(this._currentFrame + 1);
+        });
+
+        displays = [
+            bg,
+            nextBtn,
+            titleTxt,
+            confidenceTxt,
+            catsTxt,
+            hitsTxt,
+            typesTxt,
+            aTxt,
+            bTxt,
+            cTxt,
+            dTxt,
+            annoyedCatImage,
+            seriousCatImage,
+            smileCatImage,
+            stillCatImage,
+            annoyedAHitTxt,
+            annoyedBHitTxt,
+            seriousAHitTxt,
+            seriousBHitTxt,
+            stillAHitTxt,
+            stillBHitTxt,
+            stillCHitTxt,
+            smileAHitTxt,
+            smileBHitTxt,
+            smileCHitTxt,
+            smileDHitTxt,
+
+        ];
+        this.setDisplays(displays);
+    }
+
+    frame10() {
         let displays = [];
         
         const width = canvas.width;
@@ -726,7 +913,7 @@ class Display {
         this.setDisplays(displays);
     }
 
-    frame9() {
+    frame11() {
         let displays = [];
 
         const width = canvas.width;
@@ -818,7 +1005,133 @@ class Display {
         this.setDisplays(displays);
     }
 
-    frame11() {
+    passionResultFrame() {
+        // the time the game ends.
+        gameEndTime = Date.now();
+
+        let displays = [];
+        
+        const width = canvas.width;
+        const height = canvas.height;
+
+        const titleTxt = new Text("Passion Game Result",width / 2, height * 0.15, width * 0.05, "#F5DD61");
+        
+        const bg = new Background("rgba(0,0,0, 0.7)");
+        bg.setImage("../images/story-bg.jpg");
+
+        const comparisonTxt = new Text(
+            `Comparison Result: `
+        , width / 2, height * 0.25, width * 0.025, "red",width * 0.7);
+
+        const comparisonResultTxt = new Text(
+            `It doesn't matter whether you draw it perfectly or not, what matter is that you gave your full interest, love, and effort on it, those things only make it already perfect.`
+        , width / 2, height * 0.35, width * 0.025, "red",width * 0.8);
+
+        const noteTxt = new Text("-Note: I didn't make the algorithm yet to compare the two images, might add it in the future.",width * 0.7, height * 0.95, width * 0.01, "red");
+
+        const nextBtn = new Button(width / 2 - width * 0.1 / 2,height * 0.8,width * 0.1,height * 0.1,"CONTINUE");
+        nextBtn.setStyles({
+            origColor: "#FFC700",
+            hoverColor: "#CCA300",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
+
+        const downloadTxt = new Text("DOWNLOAD your ART.",width * 0.2, height * 0.54, width * 0.01, "blue");
+        const drawingBoardRatio = this.Games.passion.drawingBoard.width / this.Games.passion.drawingBoard.height;
+        const drawingResultImg = new Component(width * 0.1,height * 0.55,height * 0.4 * drawingBoardRatio,height * 0.4,"red");
+        drawingResultImg.setImage(Passion.drawingResult);
+
+        const downloadBtn = new Button(width * 0.3,height * 0.87,width * 0.1,height * 0.08,"DOWNLOAD");
+        downloadBtn.attachClick(() => {
+            const downloadLink = document.querySelector("#downloadLink");
+
+            const tempCanvas = document.createElement("canvas");
+            const tempContext = tempCanvas.getContext("2d");
+
+            tempCanvas.width = this.Games.passion.drawingBoard.width;
+            tempCanvas.height = this.Games.passion.drawingBoard.height;
+
+            const tempImage = new Image();
+            tempImage.src = Passion.drawingResult;
+            tempContext.drawImage(tempImage,0,0);
+            
+            const data = tempCanvas.toDataURL("image/png");
+            data.replace("image/png","image/octet-stream");
+
+            downloadLink.setAttribute("href",data);
+            downloadLink.click();
+        });
+
+        // add border
+        drawingResultImg.borderize("red");
+
+        nextBtn.attachClick(() => {
+            this.updateFrame(this._currentFrame + 1);
+        });
+
+        displays = [
+            bg,
+            nextBtn,
+            titleTxt,
+            comparisonTxt,
+            comparisonResultTxt,
+            noteTxt,
+            drawingResultImg,
+            downloadTxt,
+            downloadBtn
+        ]
+        this.setDisplays(displays);
+    }
+
+    finishGameFrame() {
+        let displays = [];
+        
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        const bg = new Background("rgba(0,0,0, 0.7)");
+        bg.setImage("../images/story-bg.jpg");
+
+        const titleTxt = new Text("Congratulations, for finishing the game!",width / 2, height * 0.15, width * 0.04, "blue");
+
+        const messageTxt = new Text(
+            `You finished it, how do you feel?`
+        , width / 2, height * 0.23, width * 0.025, "red",width * 0.7);
+
+        const statsTxt = new Text("Player Stats",width / 2, height * 0.35, width * 0.03, "green");
+
+        const attentionTxt = new Text(`Attention Span: ${(playerStats.getAttentionSpan() * 100).toFixed(2)}%`,width / 2, height * 0.43,width * 0.03, "blue");
+        const confidenceTxt = new Text(`Confidence: ${(playerStats.getConfidence() * 100).toFixed(2)}%`,width / 2, height * 0.5, width * 0.03, "blue");
+
+        const totalTimeTxt = new Text(`Total Time: ${((gameEndTime - gameStartTime) / 1000)} seconds`,width / 2, height * 0.61,width * 0.02, "red");
+
+        const nextBtn = new Button(width / 2 - width * 0.1 / 2,height * 0.64,width * 0.1,height * 0.1,"CONTINUE");
+        nextBtn.setStyles({
+            origColor: "#FFC700",
+            hoverColor: "#CCA300",
+            textSize: width * 0.015,
+            textColor: "white"
+        });
+
+        nextBtn.attachClick(() => {
+            this.updateFrame(this._currentFrame + 1);
+        });
+
+        displays = [
+            bg,
+            nextBtn,
+            titleTxt,
+            messageTxt,
+            statsTxt,
+            attentionTxt,
+            confidenceTxt,
+            totalTimeTxt
+        ];
+        this.setDisplays(displays);
+    }
+
+    messageFrame() {
         let displays = [];
         
         const width = canvas.width;
@@ -844,7 +1157,7 @@ class Display {
         });
 
         nextBtn.attachClick(() => {
-            this.updateFrame(this._currentFrame + 1);
+            this.updateFrame(1);
         });
 
         displays.push(bg);
@@ -912,6 +1225,7 @@ class Display {
             if (display.update)
                 display.update();
             else if (display.draw) display.draw();
+            else if (display.drawImage) display.drawImage();
 
             for (let game in this.Games) {
                 if (this.Games[game] == display && display.isPlayed) this.updateFrame(this._currentFrame + 1);

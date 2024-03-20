@@ -103,6 +103,12 @@ class Timeout {
         this.isRunning = false;
     }
 
+    // end the 'Timeout', by making it terminating conditions true.
+    end() {
+        if (this.duration) this.endCounter = this.duration;
+        if (this.ender) this.ender = () => true;
+    }
+
     // re initialize the counters and the boolean that will tell if it ends.
     restart() {
         this.counter = 0;

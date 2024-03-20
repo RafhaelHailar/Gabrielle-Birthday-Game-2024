@@ -112,11 +112,29 @@ class DrawingBoard {
 }
 
 class Passion extends Game{
+
+    // the resulting drawing board, for whenever player want to download what they draw.
+    static drawingResult = null;
+
     constructor() {
         //gamelength, callback
         super(100000,() => {
             console.log("FINISHED!");
+
+            // get the result of the drawing board.
+            const drawingBoardResult = context.getImageData(this.drawingBoard.x,this.drawingBoard.y,this.drawingBoard.width,this.drawingBoard.height);
+            const tempCanvas = document.createElement("canvas");
+            const tempContext = tempCanvas.getContext("2d");
+
+            tempCanvas.width = this.drawingBoard.width;
+            tempCanvas.height = this.drawingBoard.height;
+
+            tempContext.putImageData(drawingBoardResult,0,0);
+
+            Passion.drawingResult = tempCanvas.toDataURL();
         });
+
+
 
         super.pause(); // pause the game for instructional modal.
 
@@ -149,8 +167,8 @@ class Passion extends Game{
                     const b = px[(y * this.drawingBoard.width + x) * 4 + 2];
                     
                     if (r == 0 || g == 0 || b == 0) {
-          //             this.drawingBoard.addItem(this.drawingBoard.x + x,this.drawingBoard.y + y);
-           //            this.drawingBoard.createNewDrawing();
+                //      this.drawingBoard.addItem(this.drawingBoard.x + x,this.drawingBoard.y + y);
+                //      this.drawingBoard.createNewDrawing();
                        this.drawingBoard.setIsDrawing(true);
                     }
                 }
@@ -221,7 +239,7 @@ class Passion extends Game{
     // end the current game.
     endGame() {
         if (!this.isRunning) return;
-        alert("ENDED");
+        this.end();
     }
      
     // make the game keep track of the event or action that is happening, and call the appropriate actions.
