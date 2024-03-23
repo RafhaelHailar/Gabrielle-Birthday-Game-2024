@@ -3,6 +3,7 @@ import { context } from "../screen.js";
 import { SchedulesHolder, TimeoutBuilder } from "../timer.js";
 import PlayerStats from "../player.js";
 import Game from "./Game.js";
+import SoundHandler from "../sound.js";
 
 // get the schedules of the game.
 const schedules = new SchedulesHolder();
@@ -119,6 +120,13 @@ class Player extends MovableRect {
     // it set whether we receive damage to false, unless we keep getting damage.
     damage() {
         Confidence.value -= 0.0002;
+
+        if (!this.receivingDamage) {
+            const sound = new SoundHandler();
+            sound.play("../sounds/hit-game-2.mp3", {
+                volume: 0.5
+            });
+        }
 
         this.color = "white";
         this.image = this.damageImage;
@@ -579,8 +587,7 @@ class Confidence extends Game {
             schedules.addSchedule(beingDistractedTime); 
         })
         .build();
-
-        super.pause(); // pause the game for introduction modal.
+        
     }
 
     // resume the game.

@@ -2,6 +2,7 @@ import { canvas, context } from "../screen.js";
 import Text from "./Text.js";
 import Component from "./Component.js";
 import { addMouseMoveHandler, addClickHandler } from "../eventHandlers.js";
+import SoundHandler from "../sound.js";
 
 class Button extends Component {
 /*
@@ -36,6 +37,18 @@ class Button extends Component {
         }
         const hoverOnButton = handleHover.bind(this);
         addMouseMoveHandler(hoverOnButton);
+        
+    }
+
+    // attach a click event, the same as the parent class 'Component', but add with button sound.
+    attachClick(action,isOnce) {
+        const sound = new SoundHandler();
+        const handler = () =>  {
+            action.bind(this)();
+
+            sound.play("../sounds/button-click.mp3");
+        }
+        super.attachClick(handler,isOnce);
     }
 
     /*

@@ -94,6 +94,9 @@ class Text extends Component {
 
     // draw the text.
     draw() {
+        // if it is hidden don't draw.
+        if (this.isHide) return; 
+
         // how long until the text collapse in to a new line.
         let width = this.boxWidth != null ? this.boxWidth : canvas.width;
 

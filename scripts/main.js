@@ -22,5 +22,3 @@ function update(currentTime) {
 window.addEventListener("DOMContentLoaded",function() {
     requestAnimationFrame(update);
 });
-
-

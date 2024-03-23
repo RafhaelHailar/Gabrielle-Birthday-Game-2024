@@ -134,8 +134,6 @@ class Passion extends Game{
             Passion.drawingResult = tempCanvas.toDataURL();
         });
 
-        super.pause(); // pause the game for instructional modal.
-
         // create the drawing board.
         this.drawingBoard = new DrawingBoard();
 
@@ -232,6 +230,7 @@ class Passion extends Game{
         })
         .build();
         
+
     }
 
     // end the current game.

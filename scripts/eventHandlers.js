@@ -233,6 +233,7 @@ function removeClickHandler(id) {
 
     // throw an error if a handler with such id is not found.
     if (index == null) {
+        console.log(mouseClickFunctions);
         throw new Error("Click handler with id: " + id + " is not found.");
     }
 

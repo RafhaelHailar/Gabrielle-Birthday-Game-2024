@@ -1,5 +1,6 @@
 import { TimeoutBuilder } from "../timer.js";
 import { context } from "../screen.js";
+import SoundHandler from "../sound.js";
 
 class Game {
 /*
@@ -26,7 +27,19 @@ class Game {
         }).build();
 
         // tells whether the game is running or not.
-        this.isRunning = true;
+        // at start the game was at paused, because of the instruction then continue after the player decided to start.
+        this.isRunning = false;
+
+        this.hasRun = false; // tells whether the game run already run before, for the instructions modal.
+        
+        // sound handler
+        this.sound = new SoundHandler();
+    }
+
+    // run the game, after the instructions modal.
+    run() {
+        this.hasRun = true;
+        this.resume();
     }
 
     // their names tell what they do.
@@ -36,6 +49,7 @@ class Game {
 
     resume() {
         this.isRunning = true;
+        this.sound.setFrameIsPlayState(true);
     }
 
     // reset the game

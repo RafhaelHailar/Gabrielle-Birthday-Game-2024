@@ -3,6 +3,7 @@ import { addClickHandler, removeClickHandler } from "../eventHandlers.js";
 import { TimeoutBuilder } from "../timer.js";
 import PlayerStats from "../player.js";
 import Game from "./Game.js";
+import SoundHandler from "../sound.js";
 
 // statistics of player
 const playerStats = new PlayerStats();
@@ -70,7 +71,12 @@ class Rectangle {
 
         this.shrinkTime.span = shrinkSpeed; // how fast it reduce the size of the rectangle
         this.slope = height / width;
+        
+        this.attachClick(); // add the handler.
+    }
 
+    // attach click handler.
+    attachClick() {
         // create the click handler.
         const handleClick = this.manageClick.bind(this);
         this.handlerId = addClickHandler(handleClick, { target: this });
@@ -101,7 +107,10 @@ class Rectangle {
         // add it to the attention items information.
         Attention.Collections[this.name].clicked++;
 
-        console.log("balls");
+        const sound = new SoundHandler();
+        sound.play(`../sounds/${this.type.toLowerCase()}-click-game-1.mp3`,{
+            volume: 0.03
+        });
     }
 
     // Remove the rectangle.
@@ -157,7 +166,7 @@ class Attention extends Game{
     constructor() {
         // pass the action that will happen when the game ends.
         // gamelength, callback
-        super(60000,() => {
+        super(6000,() => {
             playerStats.setAttentionSpan(this.attentionSpan); 
         });
 
@@ -168,9 +177,16 @@ class Attention extends Game{
         // the 'Timeout' for spawning the rectangles
         this.rectsSpawnTime = new TimeoutBuilder(() => this.generateRect()).build();
 
-        // at start the game was at paused, because of the instruction then continue after the player decided to start.
-        this.pause();
+        //this.sound.playFrame(4);
     }	
+
+    // resume the game.
+    resume() {
+        // re add the handlers.
+        this.reAttachClickHandlers();
+
+        super.resume();
+    }
 
     // restart the game
     // resetting the 'Timeout's', 'Collection of rectangle', and 'Player' game stat.
@@ -180,6 +196,12 @@ class Attention extends Game{
         this.rects = [];
         this.resetToBeRemoveRects();
         this.attentionSpan = 1;
+    }
+
+    // re attach click handler after pausing, because pause is another frame, and moving to another,
+    // frame will remove every handler from previous frame, therefore we will do re attachment.
+    reAttachClickHandlers() {
+       this.rects.forEach(rect => rect.attachClick()); 
     }
 
 
@@ -215,6 +237,9 @@ class Attention extends Game{
         this.rectsSpawnTime.setSpan(spawnTime);
 
         this.rects.push(rect);
+
+        // change the speed of the sound base on the current game time.
+        this.sound.setSpeed(0.8 + (currentRatio * 0.2));
     }
 
     // Re initialize the collection of rectangles to be removed.

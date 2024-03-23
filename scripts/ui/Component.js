@@ -1,6 +1,6 @@
 import { TimeoutBuilder, SchedulesHolder, DeltaTime  } from "../timer.js";
 import { toRGB, rgbToHex, max } from "../utils.js";
-import { addClickHandler } from "../eventHandlers.js";
+import { addClickHandler, removeClickHandler } from "../eventHandlers.js";
 import { context } from "../screen.js";
 
 // scheduler
@@ -81,17 +81,25 @@ class Component {
      * Make the display clickable.
      *
      * @param {function} action The action that will happen when the display is clicked.
+     * @param {boolean} isOnce Tells whether the handler on the component only happen once, so the component is clickable only once.
      */
-    attachClick(action) {
+    attachClick(action,isOnce) {
+        let handlerId;
         const clickOnButton = (() => {
             if (!this.isHide)
             action.bind(this)();
+
+            if (isOnce)
+                removeClickHandler(handlerId);
         });
-        addClickHandler(clickOnButton,{target: this});
+        handlerId = addClickHandler(clickOnButton,{target: this});
     }
     
     // draw the image background if it exists.
     drawImage() {
+        // if it is hidden don't draw.
+        if (this.isHide) return;
+
         context.save();
         if (this.imageFilters) {
             const {opacity,grayscale,brightness} = this.imageFilters;
@@ -109,12 +117,18 @@ class Component {
 
     // draw the rectangle of the component.
     drawRect() {
+        // if it is hidden don't draw.
+        if (this.isHide) return; 
+
         context.fillStyle = this._color;
         context.fillRect(this.x,this.y,this.width,this.height);
     }   
 
     // draw the border of the component.
     drawBorder() {
+        // if it is hidden don't draw.
+        if (this.isHide) return; 
+
         context.strokeStyle = this.borderColor;
         context.strokeRect(this.x,this.y,this.width,this.height);
     }

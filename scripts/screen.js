@@ -5,6 +5,8 @@ import { TimeoutBuilder, SchedulesHolder } from "./timer.js";
 import Component from "./ui/Component.js";
 import Modal from "./ui/Modal.js";
 
+import SoundHandler from "./sound.js";
+
 import Attention from "./games/attention.js";
 import Confidence from "./games/confidence.js";
 import Passion from "./games/passion.js";
@@ -84,6 +86,18 @@ class Display {
             this.showCreditsFrame.bind(this)
         ];
 
+        this.sound = new SoundHandler(canvas);
+        this.sound.setFrames({
+            menu: [1],
+            story: [2,3,6,7,10,11],
+            attention: [4],
+            confidence: [8],
+            passion: [12],
+            result: [5,9,13],
+            message: [15]
+        });
+        this.sound.playFrame(this._currentFrame);
+
         // all the games.
         // I assign the Games object first to a variable, so the addContents in the Instructions object, can see the games.
         const Games = {
@@ -129,7 +143,7 @@ class Display {
                     })
                     .setDuration(3000)
                     .setCallback(() => {
-                        Games.attention.resume();
+                        Games.attention.run();
                         this.attention.setIsHide(true);
                     })
                     .build();
@@ -203,7 +217,7 @@ class Display {
                     })
                     .setDuration(3000)
                     .setCallback(() => {
-                        Games.confidence.resume();
+                        Games.confidence.run();
                         this.confidence.setIsHide(true);
                     })
                     .build();
@@ -271,7 +285,7 @@ class Display {
                     })
                     .setDuration(3000)
                     .setCallback(() => {
-                        Games.passion.resume();
+                        Games.passion.run();
                         this.passion.setIsHide(true);
                     })
                     .build();
@@ -319,7 +333,6 @@ class Display {
             hoverColor: "blue",
             textColor: "#F5DD61"
         });
-        this.isPause = false;
 
         // initialize the current frame.
         this.displayFrame();
@@ -415,6 +428,9 @@ class Display {
     
         resumeBtn.attachClick(() => {
             this.updateFrame(this._previousFrame);
+            // resume the paused game, if the instructions modal is already gone otherwise don't.
+            if (this.pausedGame.hasRun)
+                this.pausedGame.resume();
         });
 
         menuBtn.attachClick(() => {
@@ -433,57 +449,85 @@ class Display {
     // menu frame, going here resets the game and 'Player' stats.
     menuFrame() {
         let displays = [];
+
+        const WIDTH = canvas.width;
+        const HEIGHT = canvas.height;
         
         let bg = new Background("rgba(0,0,0, 0.7)");
         bg.setImage("../images/game-menu-bg.jpg", {
             opacity: 1
         });
-        let txt1 = new Text("Gabriella's Birthday Game",canvas.width / 2,250,100,"#000");
-        txt1.setStyles({
+
+        const shadow = new Component(0,0,WIDTH,HEIGHT,"rgba(0,0,0, 0.85)");
+        shadow.draw = function() {this.drawRect()};
+        const clickText = new Text("Click Anywhere to Play",WIDTH / 2,HEIGHT * 0.45,WIDTH * 0.05,"#ccc");
+
+        let titleText = new Text("Gabriella's Birthday Game",WIDTH / 2,HEIGHT * 0.25,WIDTH * 0.06,"#000");
+        titleText.setStyles({
             family: 'Varela Round',
             weight: 'bold',
             color: '#F4538A'
         });
        
-        let btn1 = new Button(canvas.width / 2 - 200 / 2,350,200,90,"PLAY");
-        btn1.setStyles({
+        let playBtn = new Button(canvas.width / 2 - WIDTH * 0.1 / 2,HEIGHT * 0.35,WIDTH * 0.1,HEIGHT * 0.1,"PLAY");
+        playBtn.setStyles({
             textColor: "white",
             origColor: "#FAA300",
             hoverColor: "rgb(150,80,0)", 
             textWeight: "bold",
-            textSize: 40,
-            textFamily: 'Varela Round',
+            textSize: WIDTH * 0.021,
+            textFamily: 'Varela Round'
         });
 
-        let btn2 = new Button(canvas.width / 2 - 220 / 2,460,220,100,"CREDITS");
-        btn2.setStyles({
+
+        let creditsBtn = new Button(canvas.width / 2 - WIDTH * 0.11 / 2,HEIGHT * 0.48,WIDTH * 0.11,HEIGHT * 0.11,"CREDITS");
+        creditsBtn.setStyles({
             textColor: "white",
             origColor: "#FAA300",
             hoverColor: "rgb(150,80,0)", 
             textWeight: "bold",
-            textSize: 40,
-            textFamily: 'Varela Round',
+            textSize: WIDTH * 0.021,
+            textFamily: 'Varela Round'
         });
 
-        btn1.attachClick(() => {
+        playBtn.attachClick(() => {
             this.updateFrame(this._currentFrame + 1);
         });
 
-        btn2.attachClick(() => {
+        creditsBtn.attachClick(() => {
             this.updateFrame(this.frames.length - 1); 
             this.toggleCredits(true); // show credits.
             this.cursor.setIsHidden(true); // hide the cursor image show the default cursor.
         });
+
+        shadow.attachClick(() => {
+            shadow.setIsHide(true);
+            clickText.setIsHide(true);
+            playBtn.setIsHide(false);
+            creditsBtn.setIsHide(false);
+            this.sound.init(); // initial play of the sound.
+        },true);
 
         for (let game in this.Games) {
             if (this.Games[game].restart)
                 this.Games[game].restart();
         }
 
-        displays.push(bg);
-        displays.push(btn1);
-        displays.push(btn2);
-        displays.push(txt1);
+        displays = [
+            bg,
+            playBtn,
+            creditsBtn,
+            titleText,
+        ];
+        
+        // to play the music in menu.
+        if (!this.sound.isStart) {
+            displays.push(shadow);
+            displays.push(clickText);
+            playBtn.setIsHide(true);
+            creditsBtn.setIsHide(true);
+        }
+
         this.setDisplays(displays);
     }
 
@@ -579,17 +623,21 @@ class Display {
         displays.push(bg);
 
         // if the game is not running yet, show the instructions.
-        if (!this.Games.attention.isRunning)
+        if (!this.Games.attention.hasRun)
             this.Instructions.attention.init();
 
         displays.push(this.Games.attention);
         displays.push(this.Instructions.attention);
+
+        this.sound.setFrameIsPlayState(false); // pause the sound, start it after the instruction is remove.
 
         // pause frame will be add to displays and remove 
         // must be at the end of all the display.
         this.pauseButton.attachClick(() => {
             this._previousFrame = this._currentFrame;
             this.updateFrame(0);
+            this.pausedGame = this.Games.attention;
+            this.pausedGame.pause();
         });
 
         displays.push(this.pauseButton);
@@ -676,6 +724,7 @@ class Display {
             teddyTotalClickedTxt,
             phoneTotalClickedTxt,
         ]
+            alert();
         this.setDisplays(displays);
     }
 
@@ -764,7 +813,7 @@ class Display {
         let bg = new Background("#FFF8E3");
 
         // if the game is not running yet, show the instructions.
-        if (!this.Games.confidence.isRunning)
+        if (!this.Games.confidence.hasRun)
             this.Instructions.confidence.init();
 
         this.Games.confidence.addHandlers();
@@ -980,7 +1029,7 @@ class Display {
         });
 
         // if the game is not running yet, show the instructions.
-        if (!this.Games.passion.isRunning)
+        if (!this.Games.passion.hasRun)
             this.Instructions.passion.init();
 
         this.Games.passion.addHandlers();
@@ -1210,7 +1259,9 @@ class Display {
         this.removeDisplays();
         removeHandlers();
 
-        
+        // re add the handler of the sound.
+        this.sound.addHandler();
+        this.sound.playFrame(this._currentFrame);
 
         this.displayFrame();
         this.cursor.add();
@@ -1232,6 +1283,7 @@ class Display {
             }
         }
 
+        this.sound.draw();
         this.cursor.draw();
     }
 }
