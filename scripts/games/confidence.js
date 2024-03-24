@@ -457,7 +457,7 @@ class Confidence extends Game {
     constructor() {
         // add the action that will be perform when the game ends.
         // gamelength, callback
-        super(8000,() => {
+        super(80000,() => {
             if (!this.reachEnd) Confidence.value -= 0.3;
 
             playerStats.setConfidence(Confidence.value); 
@@ -840,8 +840,8 @@ class Confidence extends Game {
         context.fillStyle = "red";
         context.font = "40px Monospace";
         context.fillText(`Screen Level: ${this.screenY}`,canvas.width * 0.12,canvas.height * 0.4);
-        context.fillText(`Attention Span: ${Math.floor(playerStats.getAttentionSpan() * 100)}%`,canvas.width * 0.15,canvas.height / 2 - 30); 
-        context.fillText(`Confidence: ${Math.floor(Confidence.value * 100)}%`,canvas.width * 0.13,canvas.height / 2 + 15); 
+        context.fillText(`Attention Span: ${(playerStats.getAttentionSpan() * 100).toFixed(2)}%`,canvas.width * 0.15,canvas.height / 2 - 30); 
+        context.fillText(`Confidence: ${(Confidence.value * 100).toFixed(2)}%`,canvas.width * 0.13,canvas.height / 2 + 15); 
     }
 }
 

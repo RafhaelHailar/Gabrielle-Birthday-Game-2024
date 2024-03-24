@@ -63,7 +63,7 @@ class Background extends Component{
 class Display {
     constructor() {
         // the current frame that is being displayed in the screen.
-        this._currentFrame = 1;
+        this._currentFrame = 4;
         this._displays = []; // all the displayed for the current frame.
         // all the frames that we have.
         this.frames = [
@@ -209,7 +209,7 @@ class Display {
                     const avoidText = new Text("- Avoid getting hit by these cats",width * 0.61,height * 0.63,width * 0.02,"red");
 
                     const effectText = new Text("EFFECTS - LOWER ATTENTION SPAN, the FREQUENT the CATS DISAPPEAR to your SIGHT.",width * 0.48,height * 0.72,width * 0.02,"blue");
-                    const statsText = new Text(`ATTENTION SPAN: ${playerStats.getAttentionSpan() * 100}%`,width / 2,height * 0.77,width * 0.02,"yellow");
+                    const statsText = new Text(`ATTENTION SPAN: ${(playerStats.getAttentionSpan() * 100).toFixed(2)}%`,width / 2,height * 0.77,width * 0.02,"yellow");
 
                     const gameStartTimer = new TimeoutBuilder(function() {
                         context.font = "30px Arial";
@@ -276,8 +276,8 @@ class Display {
                         linespace: height * 0.03
                     });
 
-                    const attentionTxt = new Text(`ATTENTION SPAN: ${playerStats.getAttentionSpan() * 100}%`,width / 2,height * 0.65,width * 0.02,"yellow",this.confidence.width - this.confidence.width * 0.4);
-                    const confidenceTxt = new Text(`CONFIDENCE: ${playerStats.getConfidence() * 100}%`,width / 2,height * 0.69,width * 0.02,"yellow",this.confidence.width - this.confidence.width * 0.4);
+                    const attentionTxt = new Text(`ATTENTION SPAN: ${(playerStats.getAttentionSpan() * 100).toFixed(2)}%`,width / 2,height * 0.65,width * 0.02,"yellow",this.confidence.width - this.confidence.width * 0.4);
+                    const confidenceTxt = new Text(`CONFIDENCE: ${(playerStats.getConfidence() * 100).toFixed(2)}%`,width / 2,height * 0.69,width * 0.02,"yellow",this.confidence.width - this.confidence.width * 0.4);
 
                     const gameStartTimer = new TimeoutBuilder(function() {
                         context.font = "30px Arial";
@@ -623,13 +623,14 @@ class Display {
         displays.push(bg);
 
         // if the game is not running yet, show the instructions.
-        if (!this.Games.attention.hasRun)
+        if (!this.Games.attention.hasRun) {
             this.Instructions.attention.init();
+            this.sound.setFrameIsPlayState(false); // pause the sound, start it after the instruction is remove.
+            this.sound.setIsPlayable(false);
+        }
 
         displays.push(this.Games.attention);
         displays.push(this.Instructions.attention);
-
-        this.sound.setFrameIsPlayState(false); // pause the sound, start it after the instruction is remove.
 
         // pause frame will be add to displays and remove 
         // must be at the end of all the display.
@@ -724,7 +725,6 @@ class Display {
             teddyTotalClickedTxt,
             phoneTotalClickedTxt,
         ]
-            alert();
         this.setDisplays(displays);
     }
 
@@ -813,8 +813,12 @@ class Display {
         let bg = new Background("#FFF8E3");
 
         // if the game is not running yet, show the instructions.
-        if (!this.Games.confidence.hasRun)
+        if (!this.Games.confidence.hasRun) {
             this.Instructions.confidence.init();
+            this.sound.setFrameIsPlayState(false); // pause the sound, start it after the instruction is remove.
+            this.sound.setIsPlayable(false);
+        }
+
 
         this.Games.confidence.addHandlers();
         displays.push(bg);
@@ -826,6 +830,8 @@ class Display {
         this.pauseButton.attachClick(() => {
             this._previousFrame = this._currentFrame;
             this.updateFrame(0);
+            this.pausedGame = this.Games.attention;
+            this.pausedGame.pause();
         });
 
         displays.push(this.pauseButton);
@@ -1029,8 +1035,12 @@ class Display {
         });
 
         // if the game is not running yet, show the instructions.
-        if (!this.Games.passion.hasRun)
+        if (!this.Games.passion.hasRun) {
             this.Instructions.passion.init();
+            this.sound.setFrameIsPlayState(false); // pause the sound, start it after the instruction is remove.
+            this.sound.setIsPlayable(false);
+        }
+
 
         this.Games.passion.addHandlers();
         displays.push(bg);
@@ -1043,6 +1053,9 @@ class Display {
         this.pauseButton.attachClick(() => {
             this._previousFrame = this._currentFrame;
             this.updateFrame(0);
+            this.pausedGame = this.Games.attention;
+            this.pausedGame.pause();
+
         });
 
         // click the button to end the game.
@@ -1260,6 +1273,7 @@ class Display {
         removeHandlers();
 
         // re add the handler of the sound.
+        this.sound.setIsPlayable(true);
         this.sound.addHandler();
         this.sound.playFrame(this._currentFrame);
 

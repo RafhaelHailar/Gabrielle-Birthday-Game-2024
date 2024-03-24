@@ -49,7 +49,10 @@ class SoundHandler {
       this.icon = new Component(canvas.width * 0.5 - SIZE / 2,canvas.height * 0.01,SIZE,SIZE);
       this.icon.setImage(this.imageSrc);
 
+      this.isPlayable = true;
+
       this.addHandler();
+
    }
 
     /*
@@ -97,11 +100,28 @@ class SoundHandler {
      this.sound.playbackRate = speed;
    }
 
+   /*
+    * Set the volume of the sound playing.
+    *
+    * @param {number} volume A number between 0 and 1 that tells the volume of the sound.
+    */
+   setVolume(volume) {
+       this.sound.volume = volume;
+   }
+
+   /*
+    * Set whether the sound is playable when the sound icon is click.
+    *
+    * @param {boolean} isPlayable Tells whether we the sound is playable or not.
+    */
+   setIsPlayable(isPlayable) {
+        this.isPlayable = isPlayable;
+   }
+
    // add the handler of the sound icon.
    addHandler() {
      this.icon.attachClick(() => {
         this.setFrameIsPlayState(!this.isOn);
-        this.icon.setImage(this.images[this.isOn?"on":"off"]);
       });
    }
 
@@ -142,8 +162,12 @@ class SoundHandler {
    setFrameIsPlayState(isPlay) {
       this.isOn = isPlay;
 
-      if (isPlay) this.sound.play();
-      else this.sound.pause();
+      if (isPlay) {
+        if (this.isPlayable)
+            this.sound.play();
+      } else this.sound.pause();
+
+      this.icon.setImage(this.images[this.isOn?"on":"off"]);
    }
 }
 

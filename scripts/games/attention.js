@@ -170,7 +170,7 @@ class Attention extends Game{
     constructor() {
         // pass the action that will happen when the game ends.
         // gamelength, callback
-        super(6000,() => {
+        super(60000,() => {
             playerStats.setAttentionSpan(this.attentionSpan); 
         });
 
@@ -292,8 +292,7 @@ class Attention extends Game{
         
         context.fillStyle = "red";
         context.font = "30px Monospace";
-        context.fillText(this.rects.length,100,100);
-        context.fillText(`Attention Span: ${Math.floor(this.attentionSpan * 100)}%`,canvas.width * 0.15,canvas.height / 2);
+        context.fillText(`Attention Span: ${(this.attentionSpan * 100).toFixed(2)}%`,canvas.width * 0.15,canvas.height / 2);
     }
 }
 

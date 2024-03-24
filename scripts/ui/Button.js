@@ -46,7 +46,9 @@ class Button extends Component {
         const handler = () =>  {
             action.bind(this)();
 
-            sound.play("../sounds/button-click.mp3");
+            sound.play("../sounds/button-click.mp3",{
+                volume: 0.2
+            });
         }
         super.attachClick(handler,isOnce);
     }

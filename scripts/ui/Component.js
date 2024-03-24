@@ -204,13 +204,6 @@ class Component {
 
            // apply the new color.
            this.setColor(`rgb(${newR},${newG},${newB})`);
-           context.font = "10px monospace";
-           if (color == "black") {
-               context.fillText(`${deltaR} ${deltaG} ${deltaB}`,200,20);
-               context.fillText(`${amount} ${deltaMax}`,200,100);
-           }
-           context.fillText(color,100,100);
-           context.fillText(`${newR} ${newG} ${newB}`,600,20);
        };
 
        // create the 'Timeout'.
