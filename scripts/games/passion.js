@@ -189,7 +189,7 @@ class Passion extends Game{
         // the opacity of the distraction image.
         this.distractionOpacity = 0;
 
-        const playerAttentionSpan = 0.1;//playerStats.getAttentionSpan();
+        const playerAttentionSpan = playerStats.getAttentionSpan();
         
         // 'Timeout' for showing the distracting image.
         this.distractionImgTime = new TimeoutBuilder(() => {})
@@ -213,7 +213,7 @@ class Passion extends Game{
         })
         .build();
 
-        const playerConfidence = 0.1;//playerStats.getConfidence():
+        const playerConfidence = playerStats.getConfidence();
         // 'Timeout' for disallowing drawing.
         this.disallowDrawTime = new TimeoutBuilder(() => {})
         // the lower the confidence the faster it will be disallow drawing

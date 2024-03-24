@@ -10,7 +10,6 @@ const schedules = new SchedulesHolder();
 
 // player statistics
 const playerStats = new PlayerStats();
-playerStats.setAttentionSpan(0.5);
 
 // game screen
 let GameScreen;

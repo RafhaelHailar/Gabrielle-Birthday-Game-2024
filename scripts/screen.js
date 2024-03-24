@@ -454,7 +454,7 @@ class Display {
         const HEIGHT = canvas.height;
         
         let bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/game-menu-bg.jpg", {
+        bg.setImage("./images/game-menu-bg.jpg", {
             opacity: 1
         });
 
