@@ -21,10 +21,26 @@
        const GAMERESOURCES = [
            ["MENU BACKGROUND","https://www.pixelstalk.net/desktop-kids-wallpapers/"],
            ["CURSOR IMAGE","https://sweezy-cursors.com/cursor/mickey-mouse-hand-inflated-glove/"],
+           ["MUSIC ON ICON","https://www.flaticon.com/free-icons/google-play-music"],
+           ["MUSIC OFF ICON","https://www.flaticon.com/free-icons/mute"],
+           ["GAME 1 BACKGROUND","https://www.freepik.com/free-vector/hand-drawn-minimal-background_15628839.htm#query=kids%20background&position=4&from_view=keyword&track=ais&uuid=0d36219b-a2c3-4147-bdee-9b53de4c5190"],
            ["PHONE IMAGE GAME 1","https://www.freepik.com/free-vector/cute-cell-phone-ring-cartoon-vector-icon-illustration-technology-object-icon-concept-isolated-flat_48782837.htm#fromView=search&page=1&position=6&uuid=295cba7c-83a5-4043-ad20-c5b549a65b21"],
            ["TEDDY BEAR IMAGE GAME 1","https://www.freepik.com/free-vector/cute-teddy-bear-waving-hand-cartoon-icon-illustration_12681152.htm#query=teddy%20bear%20cartoon&position=0&from_view=keyword&track=ais&uuid=55192888-b9b4-4b05-8007-2e961552edac"],
            ["BALL TOY IMAGE GAME 1"," https://www.freepik.com/free-vector/ball_2921824.htm#fromView=search&page=1&position=16&uuid=4a70b38b-3c1b-45b8-9a85-94f9d15d69ff"],
            ["CAR TOY IMAGE GAME 1","https://www.freepik.com/free-vector/sport-car-cartoon-vector-icon-illustration-transportation-object-icon-concept-isolated-premium-vector-flat-cartoon-style_21473075.htm#fromView=search&page=1&position=13&uuid=7f46bb4d-e277-407d-b38a-7807fadc9e28"],
+           ["STORY BACKGROUND","https://www.vecteezy.com/vector-art/22574885-flat-design-colorful-kids-background"],
+           ["MODAL INSTRUCTION BACKGROUND","https://www.freepik.com/free-vector/cute-rainbow-frame-vector-beige-background-cute-hand-drawn-style_17214056.htm#query=childish%20background&position=0&from_view=keyword&track=ais&uuid=4251ac86-24f9-4228-8f1f-5cfa9c92eeeb"],
+           ["PAUSE BACKGROUND","https://www.freepik.com/free-vector/hand-drawn-children-s-day-spanish-background_23181124.htm#query=kids%20background&position=0&from_view=keyword&track=ais&uuid=69c5356d-430f-41a0-9f52-90ccfb94002d"],
+           ["RESULT BACKGROUND","https://www.freepik.com/free-vector/watercolor-world-children-s-day-background_32624586.htm#page=2&query=kids%20background&position=1&from_view=keyword&track=ais&uuid=943d2059-fc46-4181-a70e-87ba8c497a80"],
+           ["GAME 2 BACKGROUND","https://www.freepik.com/free-vector/hand-drawn-flat-world-children-s-day-background_18893984.htm#query=kids%20background&position=6&from_view=keyword&track=ais&uuid=c0ca3ffb-a88c-4c2a-a526-65d90f2bba67"],
+           ["PLAYER NORMAL IMAGE GAME 2","https://www.vecteezy.com/vector-art/5529986-cute-hamster-sitting-with-speech-bubble-love-cartoon-vector-icon-illustration-animal-nature-icon-concept-isolated-premium-vector-flat-cartoon-style"],
+           ["PLAYER DAMAGE IMAGE GAME 2","https://www.vecteezy.com/vector-art/15840560-vector-hamster-chef-mascot-logo-cartoon-cute-creative-kawaii-cute-animal-illustration-carrying-sushi-food"],
+           ["SQUARE CATS IMAGE GAME 2","https://www.vecteezy.com/vector-art/6873319-cat-emoji-square-emoticon-smile-cute-vector-illustration"],
+           ["HOUSE GAME 2","https://www.vecteezy.com/vector-art/35863913-vector-illustration-of-cute-house-cartoon-style"],
+           ["GAME 3 BACKGROUND","https://www.freepik.com/free-vector/watercolor-world-art-day-background_23871534.htm#from_view=detail_serie"],
+           ["PENCIL CURSOR GAME 3","https://www.shareicon.net/stationary-markers-edit-tools-miscellaneous-page-stickers-831075"],
+           ["DISTRACTION IMAGE MONKEY GAME 3","https://www.gettyimages.com/photos/monkey-smiling"],
+           ["SOUNDS: CREATED BY ME USING \"SOUNDTRAP\"","https://www.soundtrap.com/home/"]
        ];
 
        const credits = document.querySelector("#credits");
@@ -38,8 +54,8 @@
            const linkElement = document.createElement("a");
            
            nameElement.innerHTML = name;
-           linkElement.innerHTML = link;
            linkElement.setAttribute("target","_blank");
+           linkElement.innerHTML = link;
            linkElement.setAttribute("href",link);
 
            container.appendChild(nameElement);
@@ -47,6 +63,7 @@
 
            creditWrapper.appendChild(container);
        }
+
        credits.appendChild(creditWrapper);
    </script>
    <script type="module" src="./scripts/main.js"></script>

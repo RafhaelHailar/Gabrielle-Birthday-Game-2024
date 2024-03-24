@@ -63,7 +63,7 @@ class Background extends Component{
 class Display {
     constructor() {
         // the current frame that is being displayed in the screen.
-        this._currentFrame = 4;
+        this._currentFrame = 1;
         this._displays = []; // all the displayed for the current frame.
         // all the frames that we have.
         this.frames = [
@@ -1245,7 +1245,10 @@ class Display {
         bg.setImage("../images/game-menu-bg.jpg", {
             opacity: 1
         });   
-        let backBtn = new Button(canvas.width * 0.05,canvas.height * 0.05,200,100,"BACK");
+        let backBtn = new Button(canvas.width * 0.05,canvas.height * 0.05,canvas.width * 0.1,canvas.height * 0.08,"BACK");
+        backBtn.setStyles({
+            textSize: canvas.width * 0.01
+        });
         backBtn.attachClick(() => {
             this.updateFrame(1);
             this.toggleCredits(false);

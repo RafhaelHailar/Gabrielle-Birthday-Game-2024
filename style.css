@@ -6,7 +6,6 @@ html,body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     height: 100vh;
     width: 100vw;
@@ -29,13 +28,15 @@ html,body {
     font-size: 5rem;
     font-weight: bold;
     margin-left: 5rem;
-    margin-top: -5rem;
-    margin-bottom: 2rem;
+    margin-top: 10rem;
+    margin-bottom: 1.5rem;
 }
 
 #credits {
     display: flex;
     justify-content: center;
+    height: 70vh;
+    overflow: scroll;
 }
 
 #credits > div {
