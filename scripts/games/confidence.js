@@ -107,11 +107,11 @@ class Player extends MovableRect {
         this.isSafeId = null; // id of the timeout, when will the player be safe.
         
         const normalImage = new Image();
-        normalImage.src = "../../images/player-normal-game-2.jpg";
+        normalImage.src = "../images/player-normal-game-2.jpg";
         this.normalImage = normalImage;
 
         const damageImage = new Image();
-        damageImage.src = "../../images/player-damage-game-2.jpg";
+        damageImage.src = "../images/player-damage-game-2.jpg";
         this.damageImage = damageImage;
 
         this.image = this.normalImage;
@@ -475,15 +475,15 @@ class Confidence extends Game {
         const catImages = ["annoyed","serious","smile","still"];
         for (let catImage of catImages) {
             let image = new Image();
-            image.src = `../../images/cat-${catImage}-cute-rectangle-game-2.png`;
+            image.src = `../images/cat-${catImage}-cute-rectangle-game-2.png`;
             Images[catImage + "Cat"] = image;
         }
 
         Images.background = new Image();
-        Images.background.src = "../../images/game-2-bg.jpg";
+        Images.background.src = "../images/game-2-bg.jpg";
         
         Images.house = new Image();
-        Images.house.src = "../../images/squirrel-house-game-2.png";
+        Images.house.src = "../images/squirrel-house-game-2.png";
 
         // the player width and height
         const PLAYERWIDTH = GameScreen.width * 0.12;

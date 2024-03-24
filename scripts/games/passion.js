@@ -144,7 +144,7 @@ class Passion extends Game{
 
         // the image that have to be drawn.
         const toDrawImgSrc = new Image();
-        toDrawImgSrc.src = "../../images/ice-cream-drawing.jpg";
+        toDrawImgSrc.src = "../images/ice-cream-drawing.jpg";
         toDrawImgSrc.onload = () => {
             this.toDrawImgSrc = toDrawImgSrc;
 
@@ -179,7 +179,7 @@ class Passion extends Game{
         }
 
         // the image the will be shown in the drawing board.
-        let distractionSrc = "../../images/monkey-smiling-distraction.jpg";
+        let distractionSrc = "../images/monkey-smiling-distraction.jpg";
         const distractionImg = new Image();
         distractionImg.src = distractionSrc;
         distractionImg.onload = () => {

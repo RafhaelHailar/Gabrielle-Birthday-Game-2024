@@ -3,13 +3,13 @@ import Component from "./ui/Component.js";
 
 // sounds for each frame.
 const FRAME_SOUNDS = {
-    menu: "../sounds/menu.mp3",
-    story: "../sounds/story.mp3",
-    attention: "../sounds/attention.mp3",
-    confidence: "../sounds/confidence.mp3",
-    passion: "../sounds/passion.mp3",
-    result: "../sounds/result.mp3",
-    message: "../sounds/message.mp3"
+    menu: "./sounds/menu.mp3",
+    story: "./sounds/story.mp3",
+    attention: "./sounds/attention.mp3",
+    confidence: "./sounds/confidence.mp3",
+    passion: "./sounds/passion.mp3",
+    result: "./sounds/result.mp3",
+    message: "./sounds/message.mp3"
 };
 
 class SoundHandler {
@@ -28,7 +28,7 @@ class SoundHandler {
       // the sound element, use for playing the sound.
       this.sound = new Audio();
 
-      this.sound.src = "../sounds/menu.mp3";
+      this.sound.src = "./sounds/menu.mp3";
       this.sound.loop = true;
       this.sound.volume = 0.3;
 
@@ -37,8 +37,8 @@ class SoundHandler {
 
       // image icon
       this.images = {
-         on: "../images/sound-on.png",
-         off: "../images/sound-off.png"
+         on: "./images/sound-on.png",
+         off: "./images/sound-off.png"
       };
 
       this.imageSrc = this.images.on;

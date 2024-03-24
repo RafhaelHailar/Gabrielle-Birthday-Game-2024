@@ -47,7 +47,7 @@ class Rectangle {
         Attention.Collections[this.name].total++;
 
         const image = new Image();
-        image.src = "../../images/" + imageName + "-game-1.png";
+        image.src = "../images/" + imageName + "-game-1.png";
         image.addEventListener("load",() => {
             this.imageSrc = image;
             this.width = width * 1.5; 

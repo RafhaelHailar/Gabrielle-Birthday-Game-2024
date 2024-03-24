@@ -26,7 +26,7 @@ class Cursor {
         this.resetSpriteId = null;
 
         const handImage = new Image();
-        handImage.src = "../images/mickey-mouse-hand-inflated-glove-custom-cursor.png";
+        handImage.src = "./images/mickey-mouse-hand-inflated-glove-custom-cursor.png";
         handImage.onload = () => {
             this.imageWidth = handImage.width;
             this.imageHeight = handImage.height;
@@ -35,7 +35,7 @@ class Cursor {
         };
 
         const pencilImage = new Image();
-        pencilImage.src = "../images/pencil-cursor.png";
+        pencilImage.src = "./images/pencil-cursor.png";
         pencilImage.onload = () => {
             this.pencilImage = pencilImage;
         };

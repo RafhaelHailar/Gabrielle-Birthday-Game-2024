@@ -115,7 +115,7 @@ class Display {
                 const IMAGESIZE = canvas.width * 0.05;
 
                 // attention instructional modal
-                this.attention.setImage("../images/modal-bg.webp",{
+                this.attention.setImage("./images/modal-bg.webp",{
                     brightness: 0.8
                 });
                 this.attention.setCloseStyle({isHide: true});
@@ -126,14 +126,14 @@ class Display {
                     const instructionTxt = new Text("Instruction:",width * 0.15,height * 0.25,width * 0.05,"green");
 
                     const carImage = new Component(canvas.width * 0.01,height * 0.37 - IMAGESIZE / 2,IMAGESIZE,IMAGESIZE,"red");
-                    carImage.setImage("../images/car-toy-game-1.png");
+                    carImage.setImage("./images/car-toy-game-1.png");
                     const bearImage = new Component(IMAGESIZE,height * 0.37 - IMAGESIZE / 2,IMAGESIZE,IMAGESIZE,"red");
-                    bearImage.setImage("../images/teddy-bear-game-1.png");
+                    bearImage.setImage("./images/teddy-bear-game-1.png");
 
                     const safeText = new Text("- CLICK the TOYS before they disappear.",width * 0.52,height * 0.38,width * 0.03,"red");
 
                     const phoneImage = new Component(0,height * 0.44,IMAGESIZE,IMAGESIZE,"red");
-                    phoneImage.setImage("../images/cellphone-game-1.png");
+                    phoneImage.setImage("./images/cellphone-game-1.png");
 
                     const dangerText = new Text("- DON'T CLICK the PHONE and let it disappear.",width * 0.56,height * 0.53,width * 0.03,"red");
 
@@ -175,7 +175,7 @@ class Display {
                     ];
                 });
 
-                this.confidence.setImage("../images/modal-bg.webp",{
+                this.confidence.setImage("./images/modal-bg.webp",{
                     brightness: 0.8
                 });
                 this.confidence.setCloseStyle({isHide: true});
@@ -193,18 +193,18 @@ class Display {
                     });
 
                     const houseImage = new Component(width * 0.04,height * 0.39,IMAGESIZE,IMAGESIZE,"red");
-                    houseImage.setImage("../images/squirrel-house-game-2.png");
+                    houseImage.setImage("./images/squirrel-house-game-2.png");
 
                     const todoText = new Text("- Move up until you get to your house before the time ends",width * 0.43,height * 0.48,width * 0.02,"red");
 
                     const annoyedCatImage = new Component(width * 0.04,height * 0.55,IMAGESIZE,IMAGESIZE,"red");
-                    annoyedCatImage.setImage("../images/cat-annoyed-cute-rectangle-game-2.png");
+                    annoyedCatImage.setImage("./images/cat-annoyed-cute-rectangle-game-2.png");
                     const seriousCatImage = new Component(width * 0.14,height * 0.55,IMAGESIZE,IMAGESIZE,"red");
-                    seriousCatImage.setImage("../images/cat-serious-cute-rectangle-game-2.png");
+                    seriousCatImage.setImage("./images/cat-serious-cute-rectangle-game-2.png");
                     const smileCatImage = new Component(width * 0.24,height * 0.55,IMAGESIZE,IMAGESIZE,"red");
-                    smileCatImage.setImage("../images/cat-smile-cute-rectangle-game-2.png");
+                    smileCatImage.setImage("./images/cat-smile-cute-rectangle-game-2.png");
                     const stillCatImage = new Component(width * 0.34,height * 0.55,IMAGESIZE,IMAGESIZE,"red");
-                    stillCatImage.setImage("../images/cat-still-cute-rectangle-game-2.png");
+                    stillCatImage.setImage("./images/cat-still-cute-rectangle-game-2.png");
 
                     const avoidText = new Text("- Avoid getting hit by these cats",width * 0.61,height * 0.63,width * 0.02,"red");
 
@@ -254,7 +254,7 @@ class Display {
                     ];
                 });
 
-                this.passion.setImage("../images/modal-bg.webp",{
+                this.passion.setImage("./images/modal-bg.webp",{
                     brightness: 0.8
                 });
                 this.passion.setCloseStyle({isHide: true});
@@ -359,7 +359,7 @@ class Display {
         let displays = [];
 
         let bg = new Background("rgba(150,20,20,1)");   
-        bg.setImage("../images/pause-bg.jpg");
+        bg.setImage("./images/pause-bg.jpg");
 
         const BUTTONWIDTH = canvas.width * 0.1;
         const BUTTONHEIGHT = canvas.height * 0.1;
@@ -384,7 +384,7 @@ class Display {
 
         const menuModal = new Modal(CENTERX - canvas.width * 0.4 / 2,canvas.height * 0.15,canvas.width * 0.4,canvas.width * 0.25,"black");
         menuModal.setCloseStyle({isHide: true});
-        menuModal.setImage("../images/modal-bg.webp",{
+        menuModal.setImage("./images/modal-bg.webp",{
             brightness: 0.8
         });
 
@@ -538,7 +538,7 @@ class Display {
         const height = canvas.height;
         
         let bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/story-bg.jpg");
+        bg.setImage("./images/story-bg.jpg");
         let txt1 = new Text(
             `In the year 2020, where everyone was inside their house feeling dark, sad, and hopeless because of the COVID-19 pandemic.
              there born a beautiful, wonderful, and spectacular girl who in turn give light to a family
@@ -571,7 +571,7 @@ class Display {
         const height = canvas.height;
 
         let bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/story-bg.jpg");
+        bg.setImage("./images/story-bg.jpg");
         let txt1 = new Text(
             `Growing up as a child in this time of the world full of DISTRACTION, her life is somewhat normal
              except for the  24/7 screen time she received.Nevertheless she was still loved or admired by her family.`
@@ -616,7 +616,7 @@ class Display {
 
         let bg = new Background("#FFFAFA");
 
-        bg.setImage("../images/game-1-bg.jpg",{
+        bg.setImage("./images/game-1-bg.jpg",{
             opacity: 0.7
         });
 
@@ -656,7 +656,7 @@ class Display {
         const Collections = Attention.Collections;
         
         const bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/result-bg.jpg");
+        bg.setImage("./images/result-bg.jpg");
 
         const titleTxt = new Text("Attention Game Result",width / 2, height * 0.15, width * 0.05, "#F4538A",width * 0.7);
 
@@ -671,13 +671,13 @@ class Display {
 
 
         const carImage = new Component(width * 0.08,height * 0.41 - IMAGESIZE / 2,IMAGESIZE,IMAGESIZE,"red");
-        carImage.setImage("../images/car-toy-game-1.png");
+        carImage.setImage("./images/car-toy-game-1.png");
 
         const bearImage = new Component(width * 0.08,height * 0.52 - IMAGESIZE / 2,IMAGESIZE,IMAGESIZE,"red");
-        bearImage.setImage("../images/teddy-bear-game-1.png");
+        bearImage.setImage("./images/teddy-bear-game-1.png");
 
         const phoneImage = new Component(width * 0.08,height * 0.58,IMAGESIZE,IMAGESIZE,"red");
-        phoneImage.setImage("../images/cellphone-game-1.png");
+        phoneImage.setImage("./images/cellphone-game-1.png");
 
         const carClickedTxt = new Text(String(Collections.car.clicked),width * 0.32, height * 0.42, width * 0.025, "green",width * 0.7);
         const teddyClickedTxt = new Text(String(Collections.teddy.clicked),width * 0.32, height * 0.53, width * 0.025, "green",width * 0.7);
@@ -735,7 +735,7 @@ class Display {
         const height = canvas.height;
         
         let bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/story-bg.jpg");
+        bg.setImage("./images/story-bg.jpg");
         let txt1 = new Text(
             `As a curious,lovely, and brave child, she strives to reach high places.Almost always climbing on desks, chairs, and any other else that
              are too high for a little kid.`
@@ -767,7 +767,7 @@ class Display {
         const height = canvas.height;
 
         let bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/story-bg.jpg");
+        bg.setImage("./images/story-bg.jpg");
         let txt1 = new Text(
             `Starting climbing at first it was kind of DIFFICULT and SCARY for her, but after successfully climbing 
              some high places she gained BRAVERY, therefore everytime she sees high places instead of feeling scared she instead felt excite.`
@@ -850,7 +850,7 @@ class Display {
         const Collections = Confidence.Collections;
 
         const bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/result-bg.jpg");
+        bg.setImage("./images/result-bg.jpg");
 
         const titleTxt = new Text("Confidence Game Result",width / 2, height * 0.15, width * 0.05, "#59D5E0");
 
@@ -863,13 +863,13 @@ class Display {
         const typesTxt = new Text("Types", width * 0.05,height * 0.72,width * 0.02,"green");
 
         const annoyedCatImage = new Component(width * 0.3,height * 0.35,IMAGESIZE,IMAGESIZE,"red");
-        annoyedCatImage.setImage("../images/cat-annoyed-cute-rectangle-game-2.png");
+        annoyedCatImage.setImage("./images/cat-annoyed-cute-rectangle-game-2.png");
         const seriousCatImage = new Component(width * 0.45,height * 0.35,IMAGESIZE,IMAGESIZE,"red");
-        seriousCatImage.setImage("../images/cat-serious-cute-rectangle-game-2.png");
+        seriousCatImage.setImage("./images/cat-serious-cute-rectangle-game-2.png");
         const smileCatImage = new Component(width * 0.75,height * 0.35,IMAGESIZE,IMAGESIZE,"red");
-        smileCatImage.setImage("../images/cat-smile-cute-rectangle-game-2.png");
+        smileCatImage.setImage("./images/cat-smile-cute-rectangle-game-2.png");
         const stillCatImage = new Component(width * 0.6,height * 0.35,IMAGESIZE,IMAGESIZE,"red");
-        stillCatImage.setImage("../images/cat-still-cute-rectangle-game-2.png");
+        stillCatImage.setImage("./images/cat-still-cute-rectangle-game-2.png");
 
         const aTxt = new Text("A", width * 0.15,height * 0.58,width * 0.04,"green");
         const bTxt = new Text("B", width * 0.15,height * 0.68,width * 0.04,"green");
@@ -943,7 +943,7 @@ class Display {
         const height = canvas.height;
         
         let bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/story-bg.jpg");
+        bg.setImage("./images/story-bg.jpg");
         let txt1 = new Text(
             `Every kid have some activities that interest them, that later on becomes their hobbies. Hobbies that in later
              time become their great skills.`
@@ -975,7 +975,7 @@ class Display {
         const height = canvas.height;
 
         let bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/story-bg.jpg");
+        bg.setImage("./images/story-bg.jpg");
         let txt1 = new Text(
             `Gabrielle sees what she likes to be DRAWING, she like to draw everywhere scribing on the wall,
              on the chair, tables, EVERYWHERE, she will even draw on your face if she got a chance.`
@@ -1019,7 +1019,7 @@ class Display {
         let displays = [];
         
         let bg = new Background("rgba(0,60,0, 0.7)");
-        bg.setImage("../images/game-3-bg.jpg");
+        bg.setImage("./images/game-3-bg.jpg");
         let finishBtn = new Button(
             this.Games.passion.drawingBoard.x + this.Games.passion.drawingBoard.width,
             this.Games.passion.drawingBoard.y + this.Games.passion.drawingBoard.height - canvas.width * 0.05,
@@ -1079,7 +1079,7 @@ class Display {
         const titleTxt = new Text("Passion Game Result",width / 2, height * 0.15, width * 0.05, "#F5DD61");
         
         const bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/story-bg.jpg");
+        bg.setImage("./images/story-bg.jpg");
 
         const comparisonTxt = new Text(
             `Comparison Result: `
@@ -1153,7 +1153,7 @@ class Display {
         const height = canvas.height;
         
         const bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/story-bg.jpg");
+        bg.setImage("./images/story-bg.jpg");
 
         const titleTxt = new Text("Congratulations, for finishing the game!",width / 2, height * 0.15, width * 0.04, "blue");
 
@@ -1200,7 +1200,7 @@ class Display {
         const height = canvas.height;
         
         let bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/story-bg.jpg");
+        bg.setImage("./images/story-bg.jpg");
         let txt1 = new Text(
             `Cute Little Gabrielle, when you were able to read this I want you to know or rather I hope you already know and feel, or I hope we already made you know and feel, that you are a fantastic
             and marvelous kid that you are special as what you are.We know that you can achieve whatever it is in the world when you give your FOCUS on how to achieve it, and trying to achieve it, when you
@@ -1242,7 +1242,7 @@ class Display {
     showCreditsFrame() {
         let display = [];
         let bg = new Background("rgba(0,0,0, 0.7)");
-        bg.setImage("../images/game-menu-bg.jpg", {
+        bg.setImage("./images/game-menu-bg.jpg", {
             opacity: 1
         });   
         let backBtn = new Button(canvas.width * 0.05,canvas.height * 0.05,canvas.width * 0.1,canvas.height * 0.08,"BACK");
