@@ -109,7 +109,7 @@ class Rectangle {
 
         const sound = new SoundHandler();
         sound.play(`../sounds/${this.type.toLowerCase()}-click-game-1.mp3`,{
-            volume: 0.03
+            volume: 0.2
         });
     }
 
@@ -148,20 +148,24 @@ class Rectangle {
 class Attention extends Game{
 
     // information about the items that shows up.
-    static Collections = {
-        car: {
-            total: 0,
-            clicked: 0
-        },
-        teddy: {
-            total: 0,
-            clicked: 0
-        },
-        cellphone: {
-            total: 0,
-            clicked: 0
-        },
-    };
+    static Collections; 
+
+    static startCollections() {
+        Attention.Collections = {
+            car: {
+                total: 0,
+                clicked: 0
+            },
+            teddy: {
+                total: 0,
+                clicked: 0
+            },
+            cellphone: {
+                total: 0,
+                clicked: 0
+            },
+        };
+    }
 
     constructor() {
         // pass the action that will happen when the game ends.
@@ -176,8 +180,8 @@ class Attention extends Game{
 
         // the 'Timeout' for spawning the rectangles
         this.rectsSpawnTime = new TimeoutBuilder(() => this.generateRect()).build();
-
-        //this.sound.playFrame(4);
+        
+        Attention.startCollections();
     }	
 
     // resume the game.
@@ -196,6 +200,8 @@ class Attention extends Game{
         this.rects = [];
         this.resetToBeRemoveRects();
         this.attentionSpan = 1;
+
+        Attention.startCollections();
     }
 
     // re attach click handler after pausing, because pause is another frame, and moving to another,

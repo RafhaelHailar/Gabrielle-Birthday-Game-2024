@@ -106,6 +106,11 @@ class DrawingBoard {
         this.drawItems();
     }
 
+    // remove every drawing
+    clear() {
+        this.items = [[]];
+    }
+
     update() {
         this.draw();
     }
@@ -237,6 +242,16 @@ class Passion extends Game{
     endGame() {
         if (!this.isRunning) return;
         this.end();
+    }
+
+    // restart the game.
+    restart() {
+        super.restart();
+
+        this.distractionImgTime.restart();
+        this.disallowDrawTime.restart();
+
+        this.drawingBoard.clear();
     }
      
     // make the game keep track of the event or action that is happening, and call the appropriate actions.

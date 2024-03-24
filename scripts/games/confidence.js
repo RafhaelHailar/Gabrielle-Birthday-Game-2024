@@ -619,6 +619,8 @@ class Confidence extends Game {
         this.lowAttentionSpanEffectTime.restart();
         this.screenY = 0;
         this.player.y = GameScreen.height -this.player.height -200;
+        this.player.velocityX = 0;
+        this.player.velocityY = 0;
 
         Confidence.value = 1;
         Confidence.startCollections();
