@@ -133,9 +133,7 @@ class Player extends MovableRect {
 
         if (!this.receivingDamage) {
             const sound = new SoundHandler();
-            sound.play("../sounds/hit-game-2.mp3", {
-                volume: 0.5
-            });
+            sound.play("../sounds/hit-game-2.mp3");
         }
 
         this.color = "white";
@@ -148,7 +146,7 @@ class Player extends MovableRect {
             this.color = "orange";
             this.image = this.normalImage;
             this.setReceivedDamage(false);
-        },300);
+        },100);
 
         this.setReceivedDamage(true);
     }
@@ -408,54 +406,60 @@ class Confidence extends Game {
 
     // the informations about the cats and player in the game.
     // for gathering some data about the player of the game to make the game even more fun in the future.
-    static Collections = {
-        annoyed: {
-            a: {
-                totalHit: 0
+    static Collections;
+
+    static startCollections() {
+        Confidence.Collections = {
+            annoyed: {
+                a: {
+                    totalHit: 0
+                },
+                b: {
+                    totalHit: 0
+                },
             },
-            b: {
-                totalHit: 0
+            serious: {
+                a: {
+                    totalHit: 0
+                },
+                b: {
+                    totalHit: 0
+                },
             },
-        },
-        serious: {
-            a: {
-                totalHit: 0
+            still: {
+                a: {
+                    totalHit: 0
+                },
+                b: {
+                    totalHit: 0
+                },
+                c: {
+                    totalHit: 0
+                },
             },
-            b: {
-                totalHit: 0
-            },
-        },
-        still: {
-            a: {
-                totalHit: 0
-            },
-            b: {
-                totalHit: 0
-            },
-            c: {
-                totalHit: 0
-            },
-        },
-        smile: {
-            a: {
-                totalHit: 0
-            },
-            b: {
-                totalHit: 0
-            },
-            c: {
-                totalHit: 0
-            },
-            d: {
-                totalHit: 0
-            },
+            smile: {
+                a: {
+                    totalHit: 0
+                },
+                b: {
+                    totalHit: 0
+                },
+                c: {
+                    totalHit: 0
+                },
+                d: {
+                    totalHit: 0
+                },
+            }
         }
-    };
+    }
 
     constructor() {
         // add the action that will be perform when the game ends.
         // gamelength, callback
-        super(80000,function(){
+        super(8000,() => {
+            if (!this.reachEnd) Confidence.value -= 0.3;
+
             playerStats.setConfidence(Confidence.value); 
         }); 
 
@@ -495,6 +499,9 @@ class Confidence extends Game {
             w: false,
             s: false
         };
+
+        // tells if the player reach the end goal.
+        this.reachEnd = false;
         
         // holds differnet types of blocks
         this.blocks = {
@@ -597,12 +604,24 @@ class Confidence extends Game {
             schedules.addSchedule(beingDistractedTime); 
         })
         .build();
-        
+       
+       Confidence.startCollections();
     }
 
     // resume the game.
     resume() {
         super.resume();
+    }
+
+    // resetting the game.
+    restart() {
+        super.restart();
+        this.lowAttentionSpanEffectTime.restart();
+        this.screenY = 0;
+        this.player.y = GameScreen.height -this.player.height -200;
+
+        Confidence.value = 1;
+        Confidence.startCollections();
     }
 
     // Contains the logic of the player.
@@ -613,6 +632,7 @@ class Confidence extends Game {
 
         // when the player reach a point above the screen, the game is finished.
         if (player.y < 200) {
+            this.reachEnd = true;
             super.end();
         }
 

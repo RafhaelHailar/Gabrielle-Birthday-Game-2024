@@ -39,6 +39,7 @@ class Game {
     // run the game, after the instructions modal.
     run() {
         this.hasRun = true;
+        this.sound.setIsPlayable(true);
         this.resume();
     }
 
@@ -54,6 +55,8 @@ class Game {
 
     // reset the game
     restart() {
+        this.isPlayed = false;
+        this.hasRun = false;
         this.gameTime.restart();
         this.pause();
     }
