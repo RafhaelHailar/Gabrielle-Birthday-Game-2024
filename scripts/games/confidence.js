@@ -75,10 +75,20 @@ class MovableRect extends Rectangle {
         super(x,y,width,height,color);
         this.velocityX = 0; // how fast the rectangle moves in horizontally.
         this.velocityY = 0; // how fast the rectangle moves in vertically. 
+
+        this.updateOldPosition();
+    }
+
+    // update the old position values, for collission detection.
+    updateOldPosition() {
+        this.oldX = this.x;
+        this.oldY = this.y;
     }
 
     // update the position of the rectangle and draw it. + GameScreen.y
     update() {
+        this.updateOldPosition();
+        
         this.x += this.velocityX;
         this.y += this.velocityY;
 
@@ -603,7 +613,7 @@ class Confidence extends Game {
 
         // when the player reach a point above the screen, the game is finished.
         if (player.y < 200) {
-            this.isPlayed = true;
+            super.end();
         }
 
         // when the screen is not yet moved down at target point.
@@ -648,7 +658,52 @@ class Confidence extends Game {
 
                this.player.damage();
             }
+
+            // move the player after collission.
+            // -> outer if: when the player horizontal position is in between the block horizontal position.
+            // cool diagram 1:
+            //     | block |
+            //   | player | 
+            // cool diagram 1.5:
+            //     | block |
+            //         | player |
+            if (player.x + player.width > block.x && player.x < block.x + block.width) {
+
+               player.velocityY = 0;
+               // inner if: when the player vertical position is less than the vertical position of block.
+               // cool diagram 2:
+               //    |       | * - player
+               //   *|****** | | - block
+               //   *|     * |
+               if (block.y + block.height > player.y && block.oldY + block.height < player.oldY) {
+                   player.y += block.height;
+               }
+
+               // inner if: when the player vertical position is greater than the vertical position of block.
+               // cool diagram 2.5:
+               //    | *     |* * - player
+               //    | ******|* | - block
+               //    |       |
+               if (block.y < player.y + player.height && block.oldY > player.oldY + player.height) player.y -= block.height;
+            }
+            
+            // -> outer if: when the player vertical position is in between the block vertical position.
+            // cool diagram:
+            //  ref- cool diagram 2
+            //  ref- cool diagram 2.5
+            if (player.y < block.y + block.height && player.y + player.height > block.y) {
+                player.velocityX = 0;
+                // inner if: when the player horizontal position is less than the horizontal position of block.
+                // ref- cool diagram 1
+                if (block.x < player.x + player.width && block.oldX > player.oldX + player.width) player.x -= block.width * 0.3;
+                // inner if: when the player horizontal position is greater than the horizontal position of block.
+                // ref- cool diagram 1.5
+                if (block.x + block.width > player.x && block.oldX + block.width < player.oldX) player.x += block.width * 0.3;
+            }
+            
         }
+
+
     }
 
     /*
