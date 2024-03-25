@@ -108,7 +108,7 @@ class Rectangle {
         Attention.Collections[this.name].clicked++;
 
         const sound = new SoundHandler();
-        sound.play(`../sounds/${this.type.toLowerCase()}-click-game-1.mp3`,{
+        sound.play(`./sounds/${this.type.toLowerCase()}-click-game-1.mp3`,{
             volume: 0.2
         });
     }

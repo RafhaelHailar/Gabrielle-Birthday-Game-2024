@@ -672,13 +672,13 @@ class Display {
 
 
         const carImage = new Component(width * 0.08,height * 0.41 - IMAGESIZE / 2,IMAGESIZE,IMAGESIZE,"red");
-        carImage.setImage("./images/car-toy-game-1.png");
+        carImage.setImage(ImageHolder.CAR_TOY_GAME_1);
 
         const bearImage = new Component(width * 0.08,height * 0.52 - IMAGESIZE / 2,IMAGESIZE,IMAGESIZE,"red");
-        bearImage.setImage("./images/teddy-bear-game-1.png");
+        bearImage.setImage(ImageHolder.TEDDY_BEAR_GAME_1);
 
         const phoneImage = new Component(width * 0.08,height * 0.58,IMAGESIZE,IMAGESIZE,"red");
-        phoneImage.setImage("./images/cellphone-game-1.png");
+        phoneImage.setImage(ImageHolder.CELLPHONE_GAME_1);
 
         const carClickedTxt = new Text(String(Collections.car.clicked),width * 0.32, height * 0.42, width * 0.025, "green",width * 0.7);
         const teddyClickedTxt = new Text(String(Collections.teddy.clicked),width * 0.32, height * 0.53, width * 0.025, "green",width * 0.7);
