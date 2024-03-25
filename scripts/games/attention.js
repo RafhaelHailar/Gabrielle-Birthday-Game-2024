@@ -4,9 +4,12 @@ import { TimeoutBuilder } from "../timer.js";
 import PlayerStats from "../player.js";
 import Game from "./Game.js";
 import SoundHandler from "../sound.js";
+import ImageHolder from "../image.js";
 
 // statistics of player
 const playerStats = new PlayerStats();
+
+
 
 class Rectangle {
 /*
@@ -30,13 +33,13 @@ class Rectangle {
         this.height = height;
         this.type = type;
 
-        this.images = {
+        const Types = {
             SAFE: ["car-toy","teddy-bear"],
             DANGER: ["cellphone"]
         };
         this.color = type == "SAFE" ? "#ADD8E6" : "rgb(255,76,48)";
         
-        const imageCollection = this.images[type];
+        const imageCollection = Types[type];
 
         const imageName = imageCollection[Math.floor(Math.random() * imageCollection.length)];
 
@@ -46,14 +49,11 @@ class Rectangle {
         // add it to the attention items information.
         Attention.Collections[this.name].total++;
 
-        const image = new Image();
-        image.src = "../images/" + imageName + "-game-1.png";
-        image.addEventListener("load",() => {
-            this.imageSrc = image;
-            this.width = width * 1.5; 
-            this.height = image.width / image.height * this.width;
-        });
+        this.imageSrc = ImageHolder[imageName.toUpperCase().replace(/-/g,"_") + "_GAME_1"];
 
+        this.width = width * 1.5; 
+        this.height = this.imageSrc.width / this.imageSrc.height * this.width;
+        
         this.isBad = false; // if it will reduce the 'attention span'
         this.spanReduce = type == "SAFE" ? 0.01 : 0.02; // total amount to reduce in the 'attention span' based on type. 
 

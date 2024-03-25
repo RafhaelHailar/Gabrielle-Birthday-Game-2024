@@ -69,12 +69,8 @@ class Component {
      * @param {object} filters The filters of the image.
      */
     setImage(imgSrc,{opacity = 1,grayscale = 0,brightness = 1} = {}) {
-        const image = new Image();
-        image.src = imgSrc;
-        image.addEventListener("load",(() => {
-            this.image = image;
-            this.imageFilters = {opacity,grayscale,brightness}; 
-        }));
+       this.image = imgSrc;
+       this.imageFilters = {opacity,grayscale,brightness}; 
     }
 
     /*

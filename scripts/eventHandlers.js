@@ -1,4 +1,5 @@
 import { context } from "./screen.js";
+import ImageHolder from "./image.js";
 
 const mouseMoveFunctions = [];
 const mouseClickFunctions = [];
@@ -25,20 +26,12 @@ class Cursor {
         this.clicked = false;
         this.resetSpriteId = null;
 
-        const handImage = new Image();
-        handImage.src = "./images/mickey-mouse-hand-inflated-glove-custom-cursor.png";
-        handImage.onload = () => {
-            this.imageWidth = handImage.width;
-            this.imageHeight = handImage.height;
-            this.handImage = handImage;
-            this.add();
-        };
+        this.handImage = ImageHolder.HAND_CURSOR;
+        this.imageWidth = this.handImage.width;
+        this.imageHeight = this.handImage.height;
+        this.add();
 
-        const pencilImage = new Image();
-        pencilImage.src = "./images/pencil-cursor.png";
-        pencilImage.onload = () => {
-            this.pencilImage = pencilImage;
-        };
+        this.pencilImage = ImageHolder.PENCIL_CURSOR_GAME_3;
         
         this.type="hand";
 

@@ -1,15 +1,16 @@
 import Component from "./ui/Component.js";
+import ImageHolder from "./image.js";
 
 
 // sounds for each frame.
 const FRAME_SOUNDS = {
-    menu: "./sounds/menu.mp3",
-    story: "./sounds/story.mp3",
-    attention: "./sounds/attention.mp3",
-    confidence: "./sounds/confidence.mp3",
-    passion: "./sounds/passion.mp3",
-    result: "./sounds/result.mp3",
-    message: "./sounds/message.mp3"
+    menu: document.getElementById("menu-audio"),
+    story: document.getElementById("story-audio"),
+    attention: document.getElementById("game-1-audio"),
+    confidence: document.getElementById("game-2-audio"),
+    passion: document.getElementById("game-3-audio"),
+    result: document.getElementById("result-audio"),
+    message: document.getElementById("message-audio")
 };
 
 class SoundHandler {
@@ -26,9 +27,7 @@ class SoundHandler {
       else return SoundHandler.instance;
 
       // the sound element, use for playing the sound.
-      this.sound = new Audio();
-
-      this.sound.src = "./sounds/menu.mp3";
+      this.sound = FRAME_SOUNDS.menu;
       this.sound.loop = true;
       this.sound.volume = 0.3;
 
@@ -37,8 +36,8 @@ class SoundHandler {
 
       // image icon
       this.images = {
-         on: "./images/sound-on.png",
-         off: "./images/sound-off.png"
+         on: ImageHolder.SOUND_ON,
+         off: ImageHolder.SOUND_OFF
       };
 
       this.imageSrc = this.images.on;
@@ -66,7 +65,7 @@ class SoundHandler {
          const indexes = frames[frame];
          for (let i = 0;i < indexes.length;i++) {
              const index = indexes[i];
-             result[index] = FRAME_SOUNDS[frame];
+             result[index] = frame;
          }
       }
 
@@ -80,12 +79,14 @@ class SoundHandler {
     */
    playFrame(currentFrame) {
       const currentSound = this.sound.src.split("/sounds/")[1]; // get the current played sound name.
-      const nextSound = this.frames[currentFrame] && this.frames[currentFrame].split("sounds/")[1]; // the next sound name.
+      const nextSound = this.frames[currentFrame] && FRAME_SOUNDS[this.frames[currentFrame]].src.split("sounds/")[1]; // the next sound name.
       
       // play the next sound if they are not the same.
       // and if the sound source is valid.
       if (currentSound == nextSound || nextSound == null || nextSound == undefined) return;
-      this.sound.src = this.frames[currentFrame];
+      this.sound.currentTime = 0;
+      this.sound.pause();
+      this.sound = FRAME_SOUNDS[this.frames[currentFrame]];
 
       if (this.isOn)
           this.sound.play();
@@ -169,6 +170,7 @@ class SoundHandler {
 
       this.icon.setImage(this.images[this.isOn?"on":"off"]);
    }
+
 }
 
 export default SoundHandler;

@@ -3,6 +3,7 @@ import { Cursor, addClickHandler, addUnClickHandler, addMouseMoveHandler } from 
 import PlayerStats from "../player.js";
 import { SchedulesHolder, TimeoutBuilder } from "../timer.js";
 import Game from "./Game.js";
+import ImageHolder from "../image.js";
 
 const schedules = new SchedulesHolder();
 const playerStats = new PlayerStats();
@@ -136,55 +137,51 @@ class Passion extends Game{
 
             tempContext.putImageData(drawingBoardResult,0,0);
 
-            Passion.drawingResult = tempCanvas.toDataURL();
+            const resultImg = new Image();
+            resultImg.src = tempCanvas.toDataURL();
+
+            Passion.drawingResult = resultImg;
         });
 
         // create the drawing board.
         this.drawingBoard = new DrawingBoard();
 
         // the image that have to be drawn.
-        const toDrawImgSrc = new Image();
-        toDrawImgSrc.src = "../images/ice-cream-drawing.jpg";
-        toDrawImgSrc.onload = () => {
-            this.toDrawImgSrc = toDrawImgSrc;
+        const toDrawImgSrc = ImageHolder.TO_DRAW_GAME_3;
+        this.toDrawImgSrc = toDrawImgSrc;
 
-            const can = document.createElement("canvas");
-            const ctx = can.getContext("2d");
+        const can = document.createElement("canvas");
+        const ctx = can.getContext("2d");
 
-            can.width = canvas.width;
-            can.height = canvas.height;
+        can.width = canvas.width;
+        can.height = canvas.height;
 
-            ctx.drawImage(toDrawImgSrc,this.drawingBoard.x,this.drawingBoard.y,this.drawingBoard.width,this.drawingBoard.height);
+        ctx.drawImage(toDrawImgSrc,this.drawingBoard.x,this.drawingBoard.y,this.drawingBoard.width,this.drawingBoard.height);
 
-            let epx = ctx.getImageData(this.drawingBoard.x,this.drawingBoard.y,this.drawingBoard.width,this.drawingBoard.height); 
-            this.drawingBoard.setIsDrawing(true);
+        let epx = ctx.getImageData(this.drawingBoard.x,this.drawingBoard.y,this.drawingBoard.width,this.drawingBoard.height); 
+        this.drawingBoard.setIsDrawing(true);
 
-            let px = epx.data;
+        let px = epx.data;
 
-            for (let y = 0;y < this.drawingBoard.height - 100;y++) {
-                for (let x = 0;x < this.drawingBoard.width;x++) {
-                    const r = px[(y * this.drawingBoard.width + x) * 4];
-                    const g = px[(y * this.drawingBoard.width + x) * 4 + 1];
-                    const b = px[(y * this.drawingBoard.width + x) * 4 + 2];
-                    
-                    if (r == 0 || g == 0 || b == 0) {
-                //      this.drawingBoard.addItem(this.drawingBoard.x + x,this.drawingBoard.y + y);
-                //      this.drawingBoard.createNewDrawing();
-                       this.drawingBoard.setIsDrawing(true);
-                    }
+        for (let y = 0;y < this.drawingBoard.height - 100;y++) {
+            for (let x = 0;x < this.drawingBoard.width;x++) {
+                const r = px[(y * this.drawingBoard.width + x) * 4];
+                const g = px[(y * this.drawingBoard.width + x) * 4 + 1];
+                const b = px[(y * this.drawingBoard.width + x) * 4 + 2];
+                
+                if (r == 0 || g == 0 || b == 0) {
+            //      this.drawingBoard.addItem(this.drawingBoard.x + x,this.drawingBoard.y + y);
+            //      this.drawingBoard.createNewDrawing();
+                   this.drawingBoard.setIsDrawing(true);
                 }
             }
-
-            this.drawingBoard.setIsDrawing(false);
         }
+
+        this.drawingBoard.setIsDrawing(false);
+        
 
         // the image the will be shown in the drawing board.
-        let distractionSrc = "../images/monkey-smiling-distraction.jpg";
-        const distractionImg = new Image();
-        distractionImg.src = distractionSrc;
-        distractionImg.onload = () => {
-            this.distractionImgSrc = distractionImg;
-        }
+        this.distractionImgSrc = ImageHolder.DISTRACTION_GAME_3;
 
         // the opacity of the distraction image.
         this.distractionOpacity = 0;
@@ -327,14 +324,16 @@ class Passion extends Game{
                 context.restore();
             }
 
-            this.distractionImgTime.update();
+            if (playerStats.getAttentionSpan() < 1)
+                this.distractionImgTime.update();
 
             context.fillStyle = "black";
             context.font = "30px Monospace";
             context.fillText(`Confidence: ${playerStats.getConfidence() * 100}%`,canvas.width * 0.09,canvas.height / 2 - 30);
             context.fillText(`Attention Span: ${playerStats.getAttentionSpan() * 100}%`,canvas.width * 0.1,canvas.height / 2 + 15);
 
-            this.disallowDrawTime.update();
+            if (playerStats.getConfidence() < 1)
+                this.disallowDrawTime.update();
             // when the drawing is not allowed, show this text.
             if (!this.drawingBoard.isAllowDraw && this.drawingBoard.isOn(cursor.x,cursor.y)) {
                 context.font = "15px Monospace";

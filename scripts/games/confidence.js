@@ -4,6 +4,7 @@ import { SchedulesHolder, TimeoutBuilder } from "../timer.js";
 import PlayerStats from "../player.js";
 import Game from "./Game.js";
 import SoundHandler from "../sound.js";
+import ImageHolder from "../image.js";
 
 // get the schedules of the game.
 const schedules = new SchedulesHolder();
@@ -106,13 +107,8 @@ class Player extends MovableRect {
         this.receivingDamage = false; // whether the player collides with blocks, if it collide then it was receiving damage.
         this.isSafeId = null; // id of the timeout, when will the player be safe.
         
-        const normalImage = new Image();
-        normalImage.src = "../images/player-normal-game-2.jpg";
-        this.normalImage = normalImage;
-
-        const damageImage = new Image();
-        damageImage.src = "../images/player-damage-game-2.jpg";
-        this.damageImage = damageImage;
+        this.normalImage = ImageHolder.PLAYER_NORMAL_GAME_2;
+        this.damageImage = ImageHolder.PLAYER_DAMAGE_GAME_2;
 
         this.image = this.normalImage;
 
@@ -474,16 +470,13 @@ class Confidence extends Game {
 
         const catImages = ["annoyed","serious","smile","still"];
         for (let catImage of catImages) {
-            let image = new Image();
-            image.src = `../images/cat-${catImage}-cute-rectangle-game-2.png`;
+            let image = ImageHolder[`CAT_${catImage.toUpperCase()}_GAME_2`];
             Images[catImage + "Cat"] = image;
         }
 
-        Images.background = new Image();
-        Images.background.src = "../images/game-2-bg.jpg";
+        Images.background = ImageHolder.GAME_2;
         
-        Images.house = new Image();
-        Images.house.src = "../images/squirrel-house-game-2.png";
+        Images.house = ImageHolder.PLAYER_HOUSE_GAME_2;
 
         // the player width and height
         const PLAYERWIDTH = GameScreen.width * 0.12;
@@ -783,7 +776,8 @@ class Confidence extends Game {
         super.update(() => {
             this.logic();
 
-            this.lowAttentionSpanEffectTime.update();
+            if (playerStats.getAttentionSpan() < 1)
+                this.lowAttentionSpanEffectTime.update();
 
             // remember the drawing state of the game.
             context.save();
