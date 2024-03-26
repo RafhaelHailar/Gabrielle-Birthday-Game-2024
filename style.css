@@ -24,6 +24,44 @@ html,body {
     cursor: none !important;
 }
 
+/* LOADER */
+#loader {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5vh;
+    font-family: 'Varela Round', sans-serif;
+}
+
+#loader .loading-text {
+    font-weight: bold;
+    color: #FFC700;
+    font-size: 4vw;
+}
+
+#progressbar {
+    width: 70vw;
+    height: 2.5vw;
+    outline: 0.5vw solid #F4538A;
+    outline-offset: 0.2vw;
+    border-radius: 50px;
+    position: relative;
+}
+
+#progressbar > div {
+    position: absolute;
+    width: 0%;
+    height: 100%;
+    border-radius: 50px;
+    background: linear-gradient(to right,#F4538A,#FEDF00);
+}
+
+/* CREDITS */
 .credits-container .title{
     font-size: 5rem;
     font-weight: bold;

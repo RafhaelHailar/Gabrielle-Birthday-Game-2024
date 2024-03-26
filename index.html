@@ -3,10 +3,16 @@
 <head>
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-   <title>title</title>
+   <title>Gabrielle Birthday Game 2024</title>
    <link rel="stylesheet" type="text/css" href="./style.css"/>
 </head>
 <body class="nocursor">
+    <div id="loader">
+        <div class="loading-text">LOADING GAME RESOURCES<span></span></div>
+        <div id="progressbar">
+            <div></div>
+        </div>
+    </div>
    <div class="credits-container hide">
        <div class="title">Credits: </div>
        <div id="credits" >
@@ -18,7 +24,7 @@
    <!-- I decided to load all the resources first so they will not have to be loaded when the games started, and I should have done it before YEAHHHHH -->
 
    <!-- IMAGES -->
-   <div style="display: none">
+   <div id="resources" style="display: none">
    <img id="game-menu-bg" src="./images/game-menu-bg.jpg" />
    <img id="hand-cursor-image" src="./images/mickey-mouse-hand-inflated-glove-custom-cursor.png" />
    <img id="story-bg" src="./images/story-bg.jpg" />
