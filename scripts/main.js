@@ -110,12 +110,10 @@ function loadResources(resources,progressCallback) {
 
             if (type[1].split("/")[0] == "image") {
                 const image = document.createElement("img");
-                image.style.display = "none";
                 image.src = blobURL;
                 resourcesContainer.appendChild(image);
             } else {
                 const audio = document.createElement("audio");
-                audio.style.display = "none";
                 audio.src = blobURL;
                 resourcesContainer.appendChild(audio);
             }
