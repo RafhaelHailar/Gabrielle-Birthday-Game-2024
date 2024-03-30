@@ -19,4 +19,4 @@
   - Sound Trimming: <a href="https://audiotrimmer.com/">Audio Trimmer</a>
   - Image Size Reduction: <a href="https://squoosh.app/">Squoosh</a>
 
-  Play it here: <a href="#" style="text-decoration: underline">Gabriella's Birthday Game 2024</a>.
+  Play it here: <a href="https://rafhaelhailar.github.io/Gabrielle-Birthday-Game-2024/" style="text-decoration: underline">Gabriella's Birthday Game 2024</a>.
