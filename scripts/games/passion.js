@@ -8,8 +8,6 @@ import ImageHolder from "../image.js";
 const schedules = new SchedulesHolder();
 const playerStats = new PlayerStats();
 
-// Cursor
-const cursor = new Cursor();
 
 class DrawingBoard {
 /*
@@ -232,7 +230,8 @@ class Passion extends Game{
         })
         .build();
         
-
+        // this.cursor
+        this.cursor = new Cursor();
     }
 
     // end the current game.
@@ -263,8 +262,8 @@ class Passion extends Game{
             this.drawingBoard.setIsDrawing(true);
 
             // to put the tip of the pencil to x and y.
-            y = y - cursor.height / 2;
-            x = x - cursor.width / 2;
+            y = y - this.cursor.height / 2;
+            x = x - this.cursor.width / 2;
 
             if (this.drawingBoard.isOn(x,y))
                 this.drawingBoard.addItem(x,y);
@@ -282,21 +281,21 @@ class Passion extends Game{
 
         function handleMove(event) {
             // to put the tip of the pencil to x and y.
-            const x = event.clientX - cursor.width / 2;
-            const y = event.clientY - cursor.height / 2;
+            const x = event.clientX - this.cursor.width / 2;
+            const y = event.clientY - this.cursor.height / 2;
 
             if (this.isRunning && this.drawingBoard.isOn(x,y)) {
-                cursor.setType("pencil");
+                this.cursor.setType("pencil");
                 this.drawingBoard.addItem(x,y);
             } else {
                 this.drawingBoard.setIsDrawing(false);
-                cursor.setType("hand");
+                this.cursor.setType("hand");
             }
         }
 
         addMouseMoveHandler(handleMove.bind(this));
 
-        cursor.setType("pencil");
+        this.cursor.setType("pencil");
     }
 
     // draws the image that have to be drawn, and the board.
@@ -335,9 +334,9 @@ class Passion extends Game{
             if (playerStats.getConfidence() < 1)
                 this.disallowDrawTime.update();
             // when the drawing is not allowed, show this text.
-            if (!this.drawingBoard.isAllowDraw && this.drawingBoard.isOn(cursor.x,cursor.y)) {
+            if (!this.drawingBoard.isAllowDraw && this.drawingBoard.isOn(this.cursor.x,this.cursor.y)) {
                 context.font = "15px Monospace";
-                context.fillText("I don't wanna draw, its gonna be terrible anyway.",cursor.x,cursor.y + 20);
+                context.fillText("I don't wanna draw, its gonna be terrible anyway.",this.cursor.x,this.cursor.y + 20);
             }
         });
     }

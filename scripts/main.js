@@ -108,15 +108,9 @@ function loadResources(resources,progressCallback) {
             const blob = new Blob([this.response],option);
             const blobURL = URL.createObjectURL(blob);
 
-            if (type[1].split("/")[0] == "image") {
-                const image = document.createElement("img");
-                image.src = blobURL;
-                resourcesContainer.appendChild(image);
-            } else {
-                const audio = document.createElement("audio");
-                audio.src = blobURL;
-                resourcesContainer.appendChild(audio);
-            }
+            const element = document.getElementById(id);
+            element.src = blobURL;
+
             progressCallback(current / end);
         }
 
@@ -141,6 +135,7 @@ function updateProgressBar(progress) {
         const loader = document.getElementById("loader");
         loader.style.display = "none";
         requestAnimationFrame(update);
+        isGameStarted = true;
     }
 }
 
