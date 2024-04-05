@@ -78,8 +78,15 @@ class SoundHandler {
     * @param {number} currentFrame The current frame being displayed.
     */
    playFrame(currentFrame) {
-      const currentSound = this.sound.src.split("/sounds/")[1]; // get the current played sound name.
-      const nextSound = this.frames[currentFrame] && FRAME_SOUNDS[this.frames[currentFrame]].src.split("sounds/")[1]; // the next sound name.
+      // the src of each audio element is a URL object blob.
+      // it has this syntax: 'blob:<the url>/<blob reference>'
+      // where 'the url' refers to the url of the website and the 'blob reference' is a reference to the blob, like an id or something.
+      // so we are gonna extract the reference of the two, the currentSound and the nextSound to compare if they are the same audio.
+      // and viola that does what we wanted.
+      const currentSoundSrc = this.sound.src.split("/");
+      const currentSound = currentSoundSrc[currentSoundSrc.length - 1]; // get the current played sound name.
+      const nextSoundSrc = this.frames[currentFrame] && FRAME_SOUNDS[this.frames[currentFrame]].src.split("/"); // the next sound name.
+      const nextSound = nextSoundSrc && nextSoundSrc[nextSoundSrc.length - 1];
       
       // play the next sound if they are not the same.
       // and if the sound source is valid.
